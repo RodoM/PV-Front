@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function Sales() {
   return (
@@ -6,7 +6,7 @@ function Sales() {
       <div>Sales</div>
       <p>En esta vista presentariamos el listado de ventas del negocio</p>
     </>
-  )
+  );
 }
 
-export default Sales
+export default Sales;

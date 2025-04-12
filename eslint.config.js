@@ -50,7 +50,16 @@ export default [
       semi: ["error", "always"], // Asegura que siempre haya punto y coma al final de la línea
       quotes: ["error", "double"], // Usa comillas dobles
       "no-console": "warn", // Evita el uso de console.log
-      "comma-dangle": ["error", "always-multiline"], // Forzar las comas finales
+      "comma-dangle": [
+        "error",
+        {
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          imports: "always-multiline",
+          exports: "always-multiline",
+          functions: "never",
+        },
+      ], // Forzar las comas finales
       "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }], // Permite JSX en archivos .js
     },
   },

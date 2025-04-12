@@ -1,12 +1,11 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import { Separator } from "@/components/ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Outlet, useLocation } from "react-router-dom"
+import { AppSidebar } from "@/components/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Outlet, useLocation } from "react-router-dom";
 
 function DashboardLayout() {
-  const location = useLocation()
-  
-  const currentLocation = location.pathname.split('/').filter(Boolean).pop() || '';
+  const location = useLocation();
+  const currentLocation = location.pathname.split("/").filter(Boolean).pop() || "";
 
   return (
     <SidebarProvider>
@@ -24,7 +23,7 @@ function DashboardLayout() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
 
-export default DashboardLayout
+export default DashboardLayout;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function Settings() {
   return (
@@ -6,7 +6,7 @@ function Settings() {
       <div>Settings</div>
       <p>En esta vista presentariamos las configuraciones del negocio</p>
     </>
-  )
+  );
 }
 
-export default Settings
+export default Settings;

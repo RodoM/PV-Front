@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function SalesStall() {
   return (
@@ -6,7 +6,7 @@ function SalesStall() {
       <div>SalesStall</div>
       <p>Esta vista representa un puesto de venta</p>
     </>
-  )
+  );
 }
 
-export default SalesStall
+export default SalesStall;

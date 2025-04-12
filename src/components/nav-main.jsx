@@ -1,6 +1,10 @@
-
-import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { Link } from "react-router-dom"
+import {
+  SidebarGroup,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 
 export function NavMain({ items }) {
   return (

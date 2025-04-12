@@ -1,4 +1,3 @@
-import * as React from "react"
 import {
   AudioWaveform,
   Command,
@@ -8,18 +7,17 @@ import {
   Package,
   Tag,
   MapPin,
-} from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
-import { BusinessSwitcher } from "@/components/business-switcher"
+} from "lucide-react";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import { BusinessSwitcher } from "@/components/business-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -66,15 +64,13 @@ const data = {
       title: "Configuraciones",
       url: "/dashboard/configuraciones",
       icon: Settings2,
-    }
+    },
   ],
-}
+};
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar({ ...props }) {
   return (
-    (<Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <BusinessSwitcher businesses={data.businesses} />
       </SidebarHeader>
@@ -85,6 +81,6 @@ export function AppSidebar({
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
-    </Sidebar>)
+    </Sidebar>
   );
 }

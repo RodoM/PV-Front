@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function SignIn() {
   return (
@@ -6,7 +6,7 @@ function SignIn() {
       <div>SignIn</div>
       <p>En esta vista presentariamos el formulario de inicio de sesión</p>
     </>
-  )
+  );
 }
 
-export default SignIn
+export default SignIn;
