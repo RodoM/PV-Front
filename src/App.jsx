@@ -15,6 +15,7 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
+      name: "Inicio",
       element: <Landing />,
     },
     {
@@ -23,40 +24,49 @@ const App = () => {
       children: [
         {
           path: "resumen",
+          name: "Resumen",
           element: <Resume />,
         },
         {
           path: "productos",
+          name: "Productos",
           element: <Products />,
         },
         {
           path: "ventas",
+          name: "Ventas",
           element: <Sales />,
         },
         {
           path: "puestos",
+          name: "Puestos de Venta",
           element: <SalesStalls />,
         },
         {
           path: "configuraciones",
+          name: "Configuraciones",
           element: <Settings />,
         },
         {
           path: "*",
+          name: "No Encontrado",
           element: <NotFound />,
         },
       ],
     },
     {
       path: "/puestos/:id",
+      name: "Puesto",
       element: <SalesStall />,
     },
     {
       path: "/iniciar-sesion",
+      name: "Iniciar Sesión",
       element: <SignIn />,
     },
     {
       path: "/registrarse",
+      name: "Registrarse",
       element: <SignUp />,
     },
   ]);
