@@ -8,8 +8,8 @@ export const columns = [
     accessorKey: "location",
   },
   {
-    header: "Habilitado",
+    header: "Estado",
     accessorKey: "enabled",
-    cell: ({ row }) => (row.original.enabled ? "Sí" : "No"), // Mostrar "Sí" o "No"
+    cell: ({ row }) => (row.original.enabled ? "active" : "inactive"),
   },
 ];
