@@ -56,6 +56,15 @@ function ActionCell({ row }) {
           >
             Deshabilitar
           </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-black"
+            onSelect={(e) => {
+              e.preventDefault();
+              setEditDialog(true);
+            }}
+          >
+            Editar
+          </DropdownMenuItem>
           <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
             <AlertDialogContent>
               <AlertDialogHeader>
