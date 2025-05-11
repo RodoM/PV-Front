@@ -16,6 +16,8 @@ const data = [
     name: "Caja de tornillos 8x1",
     cantidad: 2,
     price: 100,
+    cliente: "Matias Alberto Ruiz",
+    fecha: "03-01-2025",
     enabled: true,
   },
   {
@@ -23,6 +25,8 @@ const data = [
     name: "Martillo carpintero Stanley",
     cantidad: 1,
     price: 1500,
+    cliente: "Emanuel Thomas Camacho",
+    fecha: "15-10-23",
     enabled: false,
   },
   {
@@ -30,6 +34,8 @@ const data = [
     name: "Destornillador Phillips",
     cantidad: 2,
     price: 350,
+    cliente: "Keila Pagano",
+    fecha: "19-04-23",
     enabled: true,
   },
   {
@@ -37,6 +43,8 @@ const data = [
     name: "Metro flexible 5m",
     cantidad: 3,
     price: 800,
+    ciente: "Candela Burgos",
+    fecha: "28-10-20",
     enabled: false,
   },
   {
@@ -44,6 +52,8 @@ const data = [
     name: "Pintura látex blanca 20L",
     cantidad: 4,
     price: 5000,
+    ciente: "Rodolfo Meroi",
+    fecha: "13-01-21",
     enabled: true,
   },
   {
@@ -51,6 +61,8 @@ const data = [
     name: "Taladro eléctrico 750W",
     cantidad: 1,
     price: 12000,
+    ciente: "Jenson Medina",
+    fecha: "19-11-25",
     enabled: false,
   },
   {
@@ -58,6 +70,8 @@ const data = [
     name: "Llave ajustable 12",
     cantidad: 5,
     price: 950,
+    ciente: "Valentin Lanfranco",
+    fecha: "13-02-24",
     enabled: true,
   },
   {
@@ -65,6 +79,8 @@ const data = [
     name: "Cinta aislante negra",
     cantidad: 10,
     price: 200,
+    ciente: "Mateo Fux",
+    fecha: "06-02-25",
     enabled: false,
   },
   {
@@ -72,6 +88,8 @@ const data = [
     name: "Sierra circular 7¼",
     cantidad: 5,
     price: 15000,
+    ciente: "Bruno Rubini",
+    fecha: "16-05-24",
     enabled: true,
   },
   {
@@ -79,6 +97,8 @@ const data = [
     name: "Nivel de burbuja 60cm",
     cantidad: 2,
     price: 1200,
+    ciente: "Mateo Regis",
+    fecha: "22-12-24",
     enabled: false,
   },
   {
@@ -86,6 +106,8 @@ const data = [
     name: "Juego de llaves Allen",
     cantidad: 4,
     price: 1800,
+    ciente: "Felipe Gonzalez",
+    fecha: "23-04-25",
     enabled: true,
   },
   {
@@ -93,6 +115,8 @@ const data = [
     name: "Brocha 4",
     cantidad: 3,
     price: 450,
+    ciente: "Gaston Jimenez",
+    fecha: "30-10-24",
     enabled: false,
   },
   {
@@ -100,6 +124,8 @@ const data = [
     name: "Pala punta redonda",
     cantidad: 2,
     price: 2500,
+    ciente: "Juan Gonzalez",
+    fecha: "11-12-23",
     enabled: true,
   },
   {
@@ -107,6 +133,8 @@ const data = [
     name: "Cemento Portland 50kg",
     cantidad: 7,
     price: 1200,
+    ciente: "Martina Garcia",
+    fecha: "27-07-25",
     enabled: false,
   },
   {
@@ -114,6 +142,8 @@ const data = [
     name: "Guantes de trabajo",
     cantidad: 3,
     price: 600,
+    ciente: "Pilar Hugo",
+    fecha: "19-01-24",
     enabled: true,
   },
   {
@@ -121,6 +151,8 @@ const data = [
     name: "Cable eléctrico 2.5mm (m)",
     cantidad: 2,
     price: 180,
+    ciente: "Rocio Muñoz",
+    fecha: "24-10-21",
     enabled: false,
   },
   {
@@ -128,6 +160,8 @@ const data = [
     name: "Escalera aluminio 6 escalones",
     cantidad: 2,
     price: 8500,
+    ciente: "Daniel Garcia",
+    fecha: "28-11-22",
     enabled: true,
   },
   {
@@ -135,6 +169,8 @@ const data = [
     name: "Candado reforzado 50mm",
     cantidad: 4,
     price: 950,
+    ciente: "Horacio Marco",
+    fecha: "22-02-22",
     enabled: false,
   },
   {
@@ -142,6 +178,8 @@ const data = [
     name: "Silicona transparente 280ml",
     cantidad: 4,
     price: 750,
+    ciente: "Marcos Giacobbe",
+    fecha: "08-01-25",
     enabled: true,
   },
   {
@@ -149,6 +187,8 @@ const data = [
     name: "Juego de brocas HSS",
     cantidad: 5,
     price: 2800,
+    ciente: "Gustavo Garcia",
+    fecha: "02-03-25",
     enabled: false,
   },
 ];

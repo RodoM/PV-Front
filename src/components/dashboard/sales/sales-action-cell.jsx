@@ -7,6 +7,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+//import Sales from "@/pages/dashboard/sales";
+import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
@@ -28,6 +36,7 @@ import { toast } from "sonner";
 function ActionCell({ row }) {
   const [loading, setLoading] = useState(false);
   const [disableDialog, setDisableDialog] = useState(false);
+  const [viewDetail, setViewDetail] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
 
   const onSubmit = () => {
@@ -55,6 +64,7 @@ function ActionCell({ row }) {
           >
             Editar
           </DropdownMenuItem>
+
           <DropdownMenuItem
             className="text-red-600"
             onSelect={(e) => {
@@ -64,6 +74,17 @@ function ActionCell({ row }) {
           >
             Deshabilitar
           </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className="text-black"
+            onSelect={(e) => {
+              e.preventDefault();
+              setViewDetail(true);
+            }}
+          >
+            Ver detalle
+          </DropdownMenuItem>
+
           <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -93,6 +114,43 @@ function ActionCell({ row }) {
               <SalesForm product={row.original} closeModal={() => setEditDialog(false)} />
             </DialogContent>
           </Dialog>
+
+          <Sheet open={viewDetail} onOpenChange={setViewDetail}>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Detalle de la venta</SheetTitle>
+                <SheetDescription>
+                  <div className="space-y-2 mt-4 text-sm">
+                    <p>
+                      <strong>ID:</strong> {row.original.id}
+                    </p>
+                    <p>
+                      <strong>Producto:</strong> {row.original.name}
+                    </p>
+                    <p>
+                      <strong>Cantidad:</strong> {row.original.cantidad}
+                    </p>
+                    <p>
+                      <strong>Precio unitario:</strong> ${row.original.price}
+                    </p>
+                    <p>
+                      <strong>Subtotal:</strong> ${row.original.cantidad * row.original.price}
+                    </p>
+                    <p>
+                      <strong>Total:</strong> ${row.original.cantidad * row.original.price}
+                    </p>
+                    <p>
+                      <strong>Cliente:</strong> {row.original.cliente}
+                    </p>
+                    <p>
+                      <strong>Fecha:</strong> {row.original.fecha}
+                    </p>
+                  </div>
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6 flex justify-end"></div>
+            </SheetContent>
+          </Sheet>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
