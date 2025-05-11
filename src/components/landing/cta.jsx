@@ -26,7 +26,7 @@ export function Cta() {
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
             <Button asChild size="lg" variant="secondary" className="min-[400px]:mr-4">
-              <a href="#registro">Registrar mi negocio</a>
+              <a href="/registrarse">Registrar mi negocio</a>
             </Button>
             <Button
               asChild
@@ -34,7 +34,7 @@ export function Cta() {
               size="lg"
               className="bg-white text-primary hover:bg-white/90"
             >
-              <a href="#demo">Solicitar demostración</a>
+              <a href="/iniciar-sesión">Iniciar sesión</a>
             </Button>
           </div>
           <p className="text-sm text-primary-foreground/80">Prueba gratuita por 30 días.</p>
