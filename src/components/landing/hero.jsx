@@ -22,10 +22,10 @@ export function Hero() {
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
             <Button asChild size="lg" className="min-[400px]:mr-4">
-              <a href="#registro">Registrar mi negocio</a>
+              <a href="/registrarse">Registrar mi negocio</a>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="#demo">Ver demostración</a>
+              <a href="/iniciar-sesion">Iniciar sesión</a>
             </Button>
           </div>
           <div className="flex items-center space-x-4 text-sm">
