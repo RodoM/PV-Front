@@ -1,44 +1,15 @@
 import { useState } from "react";
-import { EllipsisVertical, LoaderCircle } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import SalesForm from "./sales-form";
-import { toast } from "sonner";
+import SaleDetailSheet from "./sale-detail-sheet";
 
 function ActionCell({ row }) {
-  const [loading, setLoading] = useState(false);
-  const [disableDialog, setDisableDialog] = useState(false);
-  const [editDialog, setEditDialog] = useState(false);
-
-  const onSubmit = () => {
-    console.log(`Deshabilitando venta ${row.original.name}`);
-    setLoading(true);
-    setTimeout(() => {
-      toast.success("Venta deshabilitada correctamente");
-      setLoading(false);
-      setDisableDialog(false);
-    }, 2000);
-  };
+  const [viewDetail, setViewDetail] = useState(false);
 
   return (
     <>
@@ -48,53 +19,18 @@ function ActionCell({ row }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
+            className="text-black"
             onSelect={(e) => {
               e.preventDefault();
-              setEditDialog(true);
+              setViewDetail(true);
             }}
           >
-            Editar
+            Ver detalle
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-red-600"
-            onSelect={(e) => {
-              e.preventDefault();
-              setDisableDialog(true);
-            }}
-          >
-            Deshabilitar
-          </DropdownMenuItem>
-          <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Deshabilitar venta</AlertDialogTitle>
-                <AlertDialogDescription>
-                  ¿Estás seguro de que deseas deshabilitar esta venta?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <Button variant="outline" onClick={() => setDisableDialog(false)}>
-                  Cancelar
-                </Button>
-                <Button disabled={loading} onClick={onSubmit}>
-                  {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
-                  Confirmar
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          <Dialog open={editDialog} onOpenChange={setEditDialog}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Editar venta</DialogTitle>
-                <DialogDescription>Complete el formulario para editar la venta.</DialogDescription>
-              </DialogHeader>
-              <SalesForm product={row.original} closeModal={() => setEditDialog(false)} />
-            </DialogContent>
-          </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <SaleDetailSheet open={viewDetail} onOpenChange={setViewDetail} sale={row.original} />
     </>
   );
 }

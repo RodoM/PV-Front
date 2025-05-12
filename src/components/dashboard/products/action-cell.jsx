@@ -48,14 +48,6 @@ function ActionCell({ row }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault();
-              setEditDialog(true);
-            }}
-          >
-            Editar
-          </DropdownMenuItem>
-          <DropdownMenuItem
             className="text-red-600"
             onSelect={(e) => {
               e.preventDefault();
@@ -63,6 +55,15 @@ function ActionCell({ row }) {
             }}
           >
             Deshabilitar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-black"
+            onSelect={(e) => {
+              e.preventDefault();
+              setEditDialog(true);
+            }}
+          >
+            Editar
           </DropdownMenuItem>
           <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
             <AlertDialogContent>
