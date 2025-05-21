@@ -10,6 +10,7 @@ import SalesStalls from "./pages/dashboard/sales-stalls";
 import Settings from "./pages/dashboard/settings";
 import SalesStall from "./pages/sales-stall";
 import NotFound from "./pages/not-found";
+import EmployeeDashboard from "./pages/employee-dashboard/sales-stalls";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -53,6 +54,11 @@ const App = () => {
           element: <NotFound />,
         },
       ],
+    },
+    {
+      path: "/puestos",
+      name: "Puesto",
+      element: <EmployeeDashboard />,
     },
     {
       path: "/puestos/:id",

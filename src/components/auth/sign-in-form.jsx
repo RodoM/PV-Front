@@ -46,7 +46,7 @@ export function SignInForm() {
         return;
       }
 
-      navigate("/dashboard/resumen");
+      navigate("/puestos");
     }, 2000);
   };
 
