@@ -8,7 +8,7 @@ import Products from "./pages/dashboard/products";
 import Sales from "./pages/dashboard/sales";
 import SalesStalls from "./pages/dashboard/sales-stalls";
 import Settings from "./pages/dashboard/settings";
-import SalesStall from "./pages/sales-stall";
+import SalesStall from "./pages/employee-dashboard/sales-stall";
 import NotFound from "./pages/not-found";
 import EmployeeDashboard from "./pages/employee-dashboard/sales-stalls";
 
