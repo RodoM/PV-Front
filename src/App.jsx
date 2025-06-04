@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import ProtectedLayout from "./layouts/protected-layout";
 import DashboardLayout from "./layouts/dashboard-layout";
 import Landing from "./pages/landing";
 import Resume from "./pages/dashboard/resume";
@@ -21,7 +22,11 @@ const App = () => {
     },
     {
       path: "/dashboard",
-      element: <DashboardLayout />,
+      element: (
+        <ProtectedLayout>
+          <DashboardLayout />
+        </ProtectedLayout>
+      ),
       children: [
         {
           path: "resumen",
@@ -58,12 +63,20 @@ const App = () => {
     {
       path: "/puestos",
       name: "Puesto",
-      element: <EmployeeDashboard />,
+      element: (
+        <ProtectedLayout>
+          <EmployeeDashboard />
+        </ProtectedLayout>
+      ),
     },
     {
       path: "/puestos/:id",
       name: "Puesto",
-      element: <SalesStall />,
+      element: (
+        <ProtectedLayout>
+          <SalesStall />
+        </ProtectedLayout>
+      ),
     },
     {
       path: "/iniciar-sesion",
