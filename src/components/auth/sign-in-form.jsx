@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AlertTriangle, LoaderCircle } from "lucide-react";
+import api from "@/lib/axios";
+import { useAuth } from "@/providers/auth-context";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -23,6 +25,7 @@ const schema = z.object({
 });
 
 export function SignInForm() {
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,18 +39,22 @@ export function SignInForm() {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-
-      if (Math.random() < 0.2) {
-        setError(true);
-        return;
-      }
-
-      navigate("/puestos");
-    }, 2000);
+    setError(null);
+    api
+      .post("/auth/login", data)
+      .then((response) => {
+        const { token } = response.data.data;
+        setToken(token);
+        navigate("/dashboard/resumen");
+      })
+      .catch((error) => {
+        const message = error.response?.data?.message || "Error al iniciar sesión";
+        setError(message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

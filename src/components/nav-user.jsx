@@ -1,4 +1,6 @@
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { useAuth } from "@/providers/auth-context";
+import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -17,7 +19,14 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavUser({ user }) {
+  const { removeToken } = useAuth();
+  const navigate = useNavigate();
   const { isMobile } = useSidebar();
+
+  const handleLogOut = () => {
+    removeToken();
+    navigate("/login");
+  };
 
   return (
     <SidebarMenu>
@@ -69,7 +78,7 @@ export function NavUser({ user }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogOut}>
               <LogOut />
               Cerrar sesión
             </DropdownMenuItem>
