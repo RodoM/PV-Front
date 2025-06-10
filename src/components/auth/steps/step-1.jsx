@@ -8,34 +8,33 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const schema = z.object({
-  fullName: z.string().nonempty("Nombre es obligatorio"),
-  idType: z.string().nonempty("Tipo de documento es obligatorio"),
-  number: z.string().nonempty("Número de documento es obligatorio"),
-  email: z.string().email("Email no válido"),
-  phone: z.string().nonempty("Teléfono es obligatorio"),
-});
+const schema = z
+  .object({
+    nombre: z.string().nonempty("Nombre es obligatorio"),
+    apellido: z.string().nonempty("Apellido es obligatorio"),
+    email: z.string().email("Email no válido"),
+    password: z.string().nonempty("Contraseña es obligatorio"),
+    confirmPassword: z.string().nonempty("Confirmar contraseña es obligatorio"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 
 const Step1 = forwardRef(({ defaultValues }, ref) => {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      fullName: "",
-      idType: "",
-      number: "",
+      nombre: "",
+      apellido: "",
       email: "",
-      phone: "",
+      password: "",
+      confirmPassword: "",
+      tipoUsuario: 0,
       ...defaultValues,
     },
   });
@@ -44,7 +43,11 @@ const Step1 = forwardRef(({ defaultValues }, ref) => {
     validate: () =>
       new Promise((resolve) => {
         form.handleSubmit(
-          (data) => resolve(data),
+          (data) => {
+            // eslint-disable-next-line no-unused-vars
+            const { confirmPassword, ...rest } = data;
+            resolve(rest);
+          },
           () => resolve(null)
         )();
       }),
@@ -53,38 +56,15 @@ const Step1 = forwardRef(({ defaultValues }, ref) => {
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <FormField
-          name="fullName"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre y apellido</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
-            name="idType"
+            name="nombre"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Tipo de documento</FormLabel>
+                <FormLabel>Nombre</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Seleccione un tipo de documento" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dni">DNI</SelectItem>
-                      <SelectItem value="cuit">CUIT</SelectItem>
-                      <SelectItem value="passport">Pasaporte</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,13 +72,13 @@ const Step1 = forwardRef(({ defaultValues }, ref) => {
           />
 
           <FormField
-            name="number"
+            name="apellido"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Número de documento</FormLabel>
+                <FormLabel>Apellido</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,13 +101,27 @@ const Step1 = forwardRef(({ defaultValues }, ref) => {
         />
 
         <FormField
-          name="phone"
+          name="password"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Teléfono</FormLabel>
+              <FormLabel>Contraseña</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="confirmPassword"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmar contraseña</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

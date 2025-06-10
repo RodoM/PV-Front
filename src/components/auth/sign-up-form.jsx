@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Stepper,
@@ -13,6 +14,7 @@ import Step1 from "./steps/step-1";
 import Step2 from "./steps/step-2";
 import Step3 from "./steps/step-3";
 import { Link } from "react-router-dom";
+import api from "@/lib/axios";
 
 const steps = [
   {
@@ -44,19 +46,27 @@ export function SignUpForm() {
       const data = await step1Ref.current?.validate();
       if (!data) return;
 
-      console.log(data);
       setFormData((prev) => ({ ...prev, step1: data }));
+      setCurrentStep((prev) => prev + 1);
     }
 
     if (currentStep === 2) {
       const data = await step2Ref.current?.validate();
       if (!data) return;
 
-      console.log(data);
-      setFormData((prev) => ({ ...prev, step2: data }));
+      try {
+        // Persist immediately-validated data without relying on async state.
+        await api.post("/auth/register", formData.step1);
+        toast.success("Cuenta creada exitosamente");
+        await api.post("/negocio/register", data);
+        toast.success("Negocio creado exitosamente");
+        setCurrentStep((prev) => prev + 1);
+        setFormData((prev) => ({ ...prev, step2: data }));
+      } catch (error) {
+        console.error(error);
+        toast.error("Ocurrió un error en el proceso de registro");
+      }
     }
-
-    setCurrentStep((prev) => prev + 1);
   };
 
   return (

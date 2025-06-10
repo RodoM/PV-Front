@@ -2,7 +2,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
 
 function DashboardLayout() {
   const location = useLocation();
@@ -21,7 +20,6 @@ function DashboardLayout() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <Outlet />
-          <Toaster richColors />
         </div>
       </SidebarInset>
     </SidebarProvider>
