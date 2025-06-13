@@ -1,11 +1,10 @@
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { Moon, ChevronsUpDown, LogOut } from "lucide-react";
 import { useAuth } from "@/providers/auth-context";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -17,11 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/providers/theme-provider";
 
 export function NavUser({ user }) {
   const { removeToken } = useAuth();
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
 
   const handleLogOut = () => {
     removeToken();
@@ -67,16 +69,19 @@ export function NavUser({ user }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Cuenta
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notificaciones
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+              }}
+            >
+              <Moon />
+              Modo oscuro
+              <Switch
+                className="ml-auto"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                checked={theme === "dark"}
+              />
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogOut}>
               <LogOut />
