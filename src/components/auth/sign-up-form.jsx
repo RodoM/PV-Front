@@ -46,8 +46,21 @@ export function SignUpForm() {
       const data = await step1Ref.current?.validate();
       if (!data) return;
 
-      setFormData((prev) => ({ ...prev, step1: data }));
-      setCurrentStep((prev) => prev + 1);
+      try {
+        await api.post("/auth/register", data);
+        toast.success("Cuenta creada exitosamente");
+        setFormData((prev) => ({ ...prev, step1: data }));
+        setCurrentStep((prev) => prev + 1);
+      } catch (error) {
+        const { errors } = error.response.data;
+        let errorMessage = "Ocurrió un error al registrar el usuario";
+
+        if (errors[0].includes("already taken")) {
+          errorMessage = "Este email ya está registrado";
+        }
+
+        toast.error(errorMessage);
+      }
     }
 
     if (currentStep === 2) {
@@ -55,16 +68,13 @@ export function SignUpForm() {
       if (!data) return;
 
       try {
-        // Persist immediately-validated data without relying on async state.
-        await api.post("/auth/register", formData.step1);
-        toast.success("Cuenta creada exitosamente");
         await api.post("/negocio/register", data);
         toast.success("Negocio creado exitosamente");
-        setCurrentStep((prev) => prev + 1);
         setFormData((prev) => ({ ...prev, step2: data }));
+        setCurrentStep((prev) => prev + 1);
       } catch (error) {
-        console.error(error);
-        toast.error("Ocurrió un error en el proceso de registro");
+        const { message } = error.response.data;
+        toast.error(message);
       }
     }
   };
@@ -105,24 +115,9 @@ export function SignUpForm() {
 
         {currentStep !== 3 && (
           <>
-            <div className="flex justify-center space-x-4">
-              <Button
-                variant="outline"
-                className="w-32"
-                onClick={() => setCurrentStep((prev) => prev - 1)}
-                disabled={currentStep === 1}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                className="w-32"
-                onClick={handleNext}
-                disabled={currentStep > steps.length}
-              >
-                Siguiente
-              </Button>
-            </div>
+            <Button className="w-full" onClick={handleNext} disabled={currentStep > steps.length}>
+              Siguiente
+            </Button>
 
             <div className="mt-4 text-center text-sm">
               ¿Ya tienes cuenta?{" "}

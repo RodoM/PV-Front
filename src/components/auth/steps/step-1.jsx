@@ -17,7 +17,13 @@ const schema = z
     nombre: z.string().nonempty("Nombre es obligatorio"),
     apellido: z.string().nonempty("Apellido es obligatorio"),
     email: z.string().email("Email no válido"),
-    password: z.string().nonempty("Contraseña es obligatorio"),
+    password: z
+      .string()
+      .nonempty("Contraseña es obligatoria")
+      .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
+      .refine((val) => /\d/.test(val), {
+        message: "La contraseña debe incluir al menos un número",
+      }),
     confirmPassword: z.string().nonempty("Confirmar contraseña es obligatorio"),
   })
   .refine((data) => data.password === data.confirmPassword, {
