@@ -1,44 +1,23 @@
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-  Settings2,
-  ChartSpline,
-  Package,
-  Tag,
-  MapPin,
-} from "lucide-react";
+import { Store, Settings2, ChartSpline, Package, Tag, MapPin } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { BusinessSwitcher } from "@/components/business-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
 const data = {
   user: {
-    name: "Rodo 😎",
-    email: "rodomeroi@gmail.com",
+    name: "Nombre del usuario",
+    email: "email_usuario@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  businesses: [
-    {
-      name: "Negocio 1",
-      logo: GalleryVerticalEnd,
-    },
-    {
-      name: "Negocio 2",
-      logo: AudioWaveform,
-    },
-    {
-      name: "Negocio 3",
-      logo: Command,
-    },
-  ],
   routes: [
     {
       title: "Resumen",
@@ -72,7 +51,21 @@ export function AppSidebar({ ...props }) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <BusinessSwitcher businesses={data.businesses} />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <div>
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Store className="size-4" />
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-medium">Nombre del negocio</span>
+                  <span className="text-xs">Plan contratado</span>
+                </div>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.routes} />
