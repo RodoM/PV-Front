@@ -24,7 +24,7 @@ export function ProductCard({ product, onAddToCart }) {
   return (
     <Card className="h-full hover:shadow-md transition-shadow">
       <CardContent>
-        <div className="aspect-square relative mb-3 bg-gray-100 rounded-lg overflow-hidden">
+        <div className="aspect-square relative mb-3 rounded-lg overflow-hidden">
           <img
             src={product.image || "/placeholder.svg"}
             alt={product.name}

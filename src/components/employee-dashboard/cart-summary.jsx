@@ -8,30 +8,48 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ShoppingCart } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { ShoppingCart, LoaderCircle } from "lucide-react";
 import { CartItemComponent } from "./cart-item";
 
+const schema = z.object({
+  email: z.string().email("Email no válido"),
+  // paymentMethod: z.string().nonempty("Método de pago es obligatorio"),
+});
+
 export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfirmPurchase }) {
-  const [customer, setCustomer] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: "",
+      // paymentMethod: "",
+    },
+  });
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal;
 
-  const handleConfirmPurchase = () => {
-    if (customer.name && customer.email && customer.phone) {
-      onConfirmPurchase(customer);
-      setCustomer({ name: "", email: "", phone: "" });
+  const onSubmit = (data) => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      onConfirmPurchase(data);
       setIsDialogOpen(false);
-    }
+    }, 2000);
   };
-
-  const isFormValid = customer.name && customer.email && customer.phone;
 
   if (cartItems.length === 0) {
     return (
@@ -89,54 +107,28 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
               <DialogTitle>Datos del Cliente</DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name">Nombre completo</Label>
-                <Input
-                  id="name"
-                  value={customer.name}
-                  onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
-                  placeholder="Ingresa el nombre del cliente"
+            <Form {...form}>
+              <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  name="email"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="cliente@ejemplo.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
 
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={customer.email}
-                  onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                  placeholder="cliente@ejemplo.com"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Teléfono</Label>
-                <Input
-                  id="phone"
-                  value={customer.phone}
-                  onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                  placeholder="Número de teléfono"
-                />
-              </div>
-
-              <div className="pt-4 border-t">
-                <div className="flex justify-between text-lg font-semibold mb-4">
-                  <span>Total a pagar:</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-
-                <Button
-                  onClick={handleConfirmPurchase}
-                  disabled={!isFormValid}
-                  className="w-full"
-                  size="lg"
-                >
-                  Finalizar Compra
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
+                  Confirmar compra
                 </Button>
-              </div>
-            </div>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>
