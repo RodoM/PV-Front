@@ -28,12 +28,7 @@ export function Cta() {
             <Button asChild size="lg" variant="secondary" className="min-[400px]:mr-4">
               <a href="/registrarse">Registrar mi negocio</a>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="bg-white text-primary hover:bg-white/90"
-            >
+            <Button asChild variant="outline" size="lg">
               <a href="/iniciar-sesión">Iniciar sesión</a>
             </Button>
           </div>
