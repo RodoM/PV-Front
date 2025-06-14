@@ -12,7 +12,7 @@ import Settings from "./pages/dashboard/settings";
 import SalesStall from "./pages/employee-dashboard/sales-stall";
 import NotFound from "./pages/not-found";
 import EmployeeDashboard from "./pages/employee-dashboard/sales-stalls";
-
+import Employees from "./pages/dashboard/employees";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -37,6 +37,11 @@ const App = () => {
           path: "productos",
           name: "Productos",
           element: <Products />,
+        },
+        {
+          path: "empleados",
+          name: "Empleados",
+          element: <Employees />,
         },
         {
           path: "ventas",

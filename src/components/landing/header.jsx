@@ -44,7 +44,7 @@ export function Header() {
           className="flex items-center gap-2 font-bold text-xl"
         >
           <div className="bg-primary p-1 rounded-md">
-            <Shell className="h-4 w-4 text-white" />
+            <Shell className="h-4 w-4 text-white dark:text-black" />
           </div>
           Sistema PV
         </motion.div>

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Stepper,
@@ -13,6 +14,7 @@ import Step1 from "./steps/step-1";
 import Step2 from "./steps/step-2";
 import Step3 from "./steps/step-3";
 import { Link } from "react-router-dom";
+import api from "@/lib/axios";
 
 const steps = [
   {
@@ -44,19 +46,37 @@ export function SignUpForm() {
       const data = await step1Ref.current?.validate();
       if (!data) return;
 
-      console.log(data);
-      setFormData((prev) => ({ ...prev, step1: data }));
+      try {
+        await api.post("/auth/register", data);
+        toast.success("Cuenta creada exitosamente");
+        setFormData((prev) => ({ ...prev, step1: data }));
+        setCurrentStep((prev) => prev + 1);
+      } catch (error) {
+        const { errors } = error.response.data;
+        let errorMessage = "Ocurrió un error al registrar el usuario";
+
+        if (errors[0].includes("already taken")) {
+          errorMessage = "Este email ya está registrado";
+        }
+
+        toast.error(errorMessage);
+      }
     }
 
     if (currentStep === 2) {
       const data = await step2Ref.current?.validate();
       if (!data) return;
 
-      console.log(data);
-      setFormData((prev) => ({ ...prev, step2: data }));
+      try {
+        await api.post("/negocio/register", data);
+        toast.success("Negocio creado exitosamente");
+        setFormData((prev) => ({ ...prev, step2: data }));
+        setCurrentStep((prev) => prev + 1);
+      } catch (error) {
+        const { message } = error.response.data;
+        toast.error(message);
+      }
     }
-
-    setCurrentStep((prev) => prev + 1);
   };
 
   return (
@@ -95,24 +115,9 @@ export function SignUpForm() {
 
         {currentStep !== 3 && (
           <>
-            <div className="flex justify-center space-x-4">
-              <Button
-                variant="outline"
-                className="w-32"
-                onClick={() => setCurrentStep((prev) => prev - 1)}
-                disabled={currentStep === 1}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                className="w-32"
-                onClick={handleNext}
-                disabled={currentStep > steps.length}
-              >
-                Siguiente
-              </Button>
-            </div>
+            <Button className="w-full" onClick={handleNext} disabled={currentStep > steps.length}>
+              Siguiente
+            </Button>
 
             <div className="mt-4 text-center text-sm">
               ¿Ya tienes cuenta?{" "}

@@ -1,13 +1,15 @@
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -15,39 +17,83 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import api from "@/lib/axios";
 
-const schema = z.object({
-  name: z.string().nonempty("Razón social es obligatorio"),
-  province: z.string().nonempty("Provincia es obligatorio"),
-  city: z.string().nonempty("Ciudad es obligatorio"),
-  street: z.string().nonempty("Calle es obligatorio"),
-  number: z.string().nonempty("Número de calle es obligatorio"),
-  zipCode: z.string().nonempty("Código postal es obligatorio"),
-  imageURL: z.string().nonempty("URL de la imagen es obligatorio"),
-  category: z.string().nonempty("Rubro es obligatorio"),
-  currency: z.string().nonempty("Moneda es obligatorio"),
-  plan: z.string().nonempty("Plan es obligatorio"),
-});
+const schema = z
+  .object({
+    nombre: z.string().nonempty("Nombre es obligatorio"),
+    descripcion: z.string().optional(),
+    rubroId: z.number({
+      required_error: "Rubro es obligatorio",
+    }),
+    pais: z.string().nonempty("Pais es obligatorio"),
+    provincia: z.string().nonempty("Provincia es obligatorio"),
+    ciudad: z.string().nonempty("Ciudad es obligatorio"),
+    codigoPostal: z.string().nonempty("Código postal es obligatorio"),
+    calle: z.string().nonempty("Calle es obligatorio"),
+    altura: z.string().nonempty("Altura es obligatorio"),
+    usaFacturacion: z.boolean().default(false),
+    tipoFacturacion: z.number().nullable(),
+    moneda: z.number({
+      required_error: "Moneda es obligatorio",
+    }),
+    tipoDocumento: z.number({
+      required_error: "Tipo de documento es obligatorio",
+    }),
+    numeroDocumento: z.string().nonempty("Número de documento es obligatorio"),
+    email: z.string().email("Email no válido"),
+    telefono: z.string().nonempty("Telefono es obligatorio"),
+    planSaasId: z.number({
+      required_error: "Plan es obligatorio",
+    }),
+    debitoAutomaticoActivo: z.boolean().default(false),
+  })
+  .refine(
+    (data) => {
+      if (data.usaFacturacion && !data.tipoFacturacion) return false;
+      return true;
+    },
+    {
+      message: "Debe seleccionar un tipo de facturación",
+      path: ["tipoFacturacion"],
+    }
+  );
 
 const Step2 = forwardRef(({ defaultValues }, ref) => {
+  const [planOptions, setPlanOptions] = useState([]);
+
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
-      province: "",
-      city: "",
-      street: "",
-      number: "",
-      zipCode: "",
-      imageURL: "",
-      category: "",
-      currency: "",
-      plan: "",
+      nombre: "",
+      descripcion: "",
+      rubroId: null,
+      pais: "",
+      provincia: "",
+      ciudad: "",
+      codigoPostal: "",
+      calle: "",
+      altura: "",
+      usaFacturacion: false,
+      tipoFacturacion: null,
+      moneda: null,
+      tipoDocumento: null,
+      numeroDocumento: "",
+      email: "",
+      telefono: "",
+      planSaasId: null,
+      debitoAutomaticoActivo: false,
       ...defaultValues,
     },
+  });
+
+  const watchUsaFacturacion = useWatch({
+    control: form.control,
+    name: "usaFacturacion",
   });
 
   useImperativeHandle(ref, () => ({
@@ -60,11 +106,18 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
       }),
   }));
 
+  useEffect(() => {
+    api
+      .get("/plan/get-all")
+      .then((res) => setPlanOptions(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
         <FormField
-          name="name"
+          name="nombre"
           control={form.control}
           render={({ field }) => (
             <FormItem>
@@ -77,9 +130,73 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
           )}
         />
 
+        <FormField
+          name="descripcion"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descripción</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="rubroId"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Rubro</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione el rubro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Vestimenta</SelectItem>
+                    <SelectItem value="1">Comida</SelectItem>
+                    <SelectItem value="2">Electrónica</SelectItem>
+                    <SelectItem value="3">Hogar</SelectItem>
+                    <SelectItem value="4">Transporte</SelectItem>
+                    <SelectItem value="5">Salud</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
-            name="province"
+            name="pais"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Pais</FormLabel>
+                <FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleccione el pais" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="argentina">Argentina</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="provincia"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
@@ -121,9 +238,11 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               </FormItem>
             )}
           />
+        </div>
 
+        <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
-            name="city"
+            name="ciudad"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
@@ -135,11 +254,25 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               </FormItem>
             )}
           />
+
+          <FormField
+            name="codigoPostal"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Código postal</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
-            name="street"
+            name="calle"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
@@ -153,11 +286,132 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
           />
 
           <FormField
-            name="number"
+            name="altura"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Altura</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          name="usaFacturacion"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Facturación</FormLabel>
+                <FormDescription>Marque esta opción si utiliza facturación</FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        {watchUsaFacturacion && (
+          <FormField
+            name="tipoFacturacion"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Tipo de facturación</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleccione el tipo de facturación" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Manual</SelectItem>
+                      <SelectItem value="1">Electrónica</SelectItem>
+                      <SelectItem value="2">Externa</SelectItem>
+                      <SelectItem value="3">Ticketera</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        <FormField
+          name="moneda"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Moneda</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione la moneda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Peso argentino</SelectItem>
+                    <SelectItem value="1">Dólar americano</SelectItem>
+                    <SelectItem value="2">Euro</SelectItem>
+                    <SelectItem value="3">Real brasileño</SelectItem>
+                    <SelectItem value="4">Peso chileno</SelectItem>
+                    <SelectItem value="5">Peso uruguayo</SelectItem>
+                    <SelectItem value="6">Peso colombiano</SelectItem>
+                    <SelectItem value="7">Peso mexicano</SelectItem>
+                    <SelectItem value="8">Peso paraguayo</SelectItem>
+                    <SelectItem value="9">Boliviano</SelectItem>
+                    <SelectItem value="10">Bolivar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex flex-col md:flex-row items-start gap-4">
+          <FormField
+            name="tipoDocumento"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Tipo de documento</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleccione el tipo de documento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">DNI</SelectItem>
+                      <SelectItem value="1">CUIT</SelectItem>
+                      <SelectItem value="2">Pasaporte</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="numeroDocumento"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Número de documento</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -168,11 +422,25 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
         </div>
 
         <FormField
-          name="zipCode"
+          name="email"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Código postal</FormLabel>
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="telefono"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Telefono</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -182,86 +450,48 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
         />
 
         <FormField
-          name="imageURL"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>URL logo del negocio</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="category"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Rubro</FormLabel>
-              <FormControl>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccione el rubro" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="clothing">Vestimenta</SelectItem>
-                    <SelectItem value="food">Comida</SelectItem>
-                    <SelectItem value="electronics">Electrónica</SelectItem>
-                    <SelectItem value="household">Hogar</SelectItem>
-                    <SelectItem value="transportation">Transporte</SelectItem>
-                    <SelectItem value="health">Salud</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="currency"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Moneda</FormLabel>
-              <FormControl>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccione la moneda" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ars">Peso argentino</SelectItem>
-                    <SelectItem value="usd">Dólar americano</SelectItem>
-                    <SelectItem value="eur">Euro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="plan"
+          name="planSaasId"
           control={form.control}
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Plan</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value}
+                  disabled={!planOptions.length}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccione el plan" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="basic">Básico $</SelectItem>
-                    <SelectItem value="premium">Premium $$$</SelectItem>
+                    {planOptions.map((plan) => (
+                      <SelectItem key={plan.id} value={String(plan.id)}>
+                        {plan.nombre}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="debitoAutomaticoActivo"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Débito automático</FormLabel>
+                <FormDescription>
+                  Marque esta opción si desea que se le realize el débito automático
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />

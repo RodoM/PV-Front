@@ -7,10 +7,9 @@ function Step3({ email }) {
       <PartyPopper size={64} />
       <p className="text-xl font-bold">Registro exitoso</p>
       <p>
-        Hemos enviado un correo de confirmación a <span className="font-bold">{email}</span>. Por
-        favor, revisa tu bandeja de entrada y sigue las instrucciones para activar tu cuenta. Una
-        vez que confirmes tu correo electrónico, podrás acceder a tu cuenta y comenzar a utilizar
-        nuestros servicios.
+        ¡Felicitaciones! Hemos enviado un correo de confirmación a{" "}
+        <span className="font-bold">{email}</span>. Ya puedes acceder a tu cuenta y comenzar a
+        utilizar nuestros servicios.
       </p>
       <Button>
         <a href="/">Volver al inicio</a>
