@@ -19,7 +19,7 @@ function ActionCell({ row }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            className="text-black"
+            className="text-white"
             onSelect={(e) => {
               e.preventDefault();
               setViewDetail(true);
