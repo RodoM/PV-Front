@@ -54,7 +54,7 @@ function ActionCell({ row }) {
               setDisableDialog(true);
             }}
           >
-            Deshabilitar
+            {row.original.enabled ? "Deshabilitar" : "Habilitar"}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={(e) => {

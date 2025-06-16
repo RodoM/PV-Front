@@ -17,11 +17,24 @@ import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const schema = z.object({
-  name: z.string().nonempty("El nombre es obligatorio"),
-  dni: z.string().regex(/^\d{7,8}$/, "DNI inválido"),
-  position: z.string().nonempty("El puesto es obligatorio"),
-});
+const schema = z
+  .object({
+    nombre: z.string().nonempty("El nombre es obligatorio"),
+    apellido: z.string().nonempty("El apellido es obligatorio"),
+    email: z.string().email("El email es inválido"),
+    password: z
+      .string()
+      .nonempty("Contraseña es obligatoria")
+      .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
+      .refine((val) => /\d/.test(val), {
+        message: "La contraseña debe incluir al menos un número",
+      }),
+    confirmPassword: z.string().nonempty("Confirmar contraseña es obligatorio"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 
 function EmployeeForm({ employee, closeModal }) {
   const [loading, setLoading] = useState(false);
@@ -29,9 +42,11 @@ function EmployeeForm({ employee, closeModal }) {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: employee?.name || "",
-      dni: employee?.dni || "",
-      position: employee?.position || "",
+      nombre: "",
+      apellido: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -50,7 +65,7 @@ function EmployeeForm({ employee, closeModal }) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
-          name="name"
+          name="nombre"
           control={form.control}
           render={({ field }) => (
             <FormItem>
@@ -62,27 +77,57 @@ function EmployeeForm({ employee, closeModal }) {
             </FormItem>
           )}
         />
+
         <FormField
-          name="dni"
+          name="apellido"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>DNI</FormLabel>
+              <FormLabel>Apellido</FormLabel>
               <FormControl>
-                <Input placeholder="DNI" {...field} />
+                <Input placeholder="Apellido del empleado" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
-          name="position"
+          name="email"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Puesto</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Puesto de trabajo" {...field} />
+                <Input placeholder="Email del empleado" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="password"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contraseña</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="confirmPassword"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmar contraseña</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

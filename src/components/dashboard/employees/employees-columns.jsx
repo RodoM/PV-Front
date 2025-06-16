@@ -8,24 +8,16 @@ export const columns = [
     header: "ID",
   },
   {
-    accessorKey: "name",
+    accessorKey: "first_name",
     header: "Nombre",
   },
   {
-    accessorKey: "dni",
-    header: "DNI",
+    accessorKey: "last_name",
+    header: "Apellido",
   },
   {
-    accessorKey: "born-date",
-    header: "Fecha de nacimiento",
-  },
-  {
-    accessorKey: "salary",
-    header: "Salario",
-  },
-  {
-    accessorKey: "antiquity",
-    header: "Antiguedad",
+    accessorKey: "email",
+    header: "Email",
   },
   {
     accessorKey: "position",
@@ -38,6 +30,10 @@ export const columns = [
         <ArrowUpDown className="h-4 w-4" />
       </div>
     ),
+  },
+  {
+    accessorKey: "hire_date",
+    header: "Fecha alta",
   },
   {
     accessorKey: "enabled",
