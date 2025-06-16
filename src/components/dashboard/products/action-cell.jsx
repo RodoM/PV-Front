@@ -57,7 +57,6 @@ function ActionCell({ row }) {
             Deshabilitar
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-white"
             onSelect={(e) => {
               e.preventDefault();
               setEditDialog(true);

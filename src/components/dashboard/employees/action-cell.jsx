@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { EllipsisVertical, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,7 +57,6 @@ function ActionCell({ row }) {
             Deshabilitar
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-white"
             onSelect={(e) => {
               e.preventDefault();
               setShowEdit(true);
@@ -66,38 +64,37 @@ function ActionCell({ row }) {
           >
             Editar
           </DropdownMenuItem>
+          <AlertDialog open={showDisable} onOpenChange={setShowDisable}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Deshabilitar empleado</AlertDialogTitle>
+                <AlertDialogDescription>
+                  ¿Seguro que deseas deshabilitar al empleado? No podrá acceder al sistema.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button variant="outline" onClick={() => setShowDisable(false)}>
+                  Cancelar
+                </Button>
+                <Button disabled={loading} onClick={onDisable}>
+                  {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
+                  Confirmar
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <Dialog open={showEdit} onOpenChange={setShowEdit}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Editar empleado</DialogTitle>
+                <DialogDescription>Modificá la información del empleado.</DialogDescription>
+              </DialogHeader>
+              <EmployeeForm employee={row.original} closeModal={() => setShowEdit(false)} />
+            </DialogContent>
+          </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <AlertDialog open={showDisable} onOpenChange={setShowDisable}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Deshabilitar empleado</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Seguro que deseas deshabilitar al empleado? No podrá acceder al sistema.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <Button variant="outline" onClick={() => setShowDisable(false)}>
-              Cancelar
-            </Button>
-            <Button disabled={loading} onClick={onDisable}>
-              {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
-              Confirmar
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <Dialog open={showEdit} onOpenChange={setShowEdit}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar empleado</DialogTitle>
-            <DialogDescription>Modificá la información del empleado.</DialogDescription>
-          </DialogHeader>
-          <EmployeeForm employee={row.original} closeModal={() => setShowEdit(false)} />
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
