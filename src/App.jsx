@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import PublicLayout from "./layouts/public-layout";
 import ProtectedLayout from "./layouts/protected-layout";
 import DashboardLayout from "./layouts/dashboard-layout";
 import Landing from "./pages/landing";
@@ -86,12 +87,20 @@ const App = () => {
     {
       path: "/iniciar-sesion",
       name: "Iniciar Sesión",
-      element: <SignIn />,
+      element: (
+        <PublicLayout>
+          <SignIn />
+        </PublicLayout>
+      ),
     },
     {
       path: "/registrarse",
       name: "Registrarse",
-      element: <SignUp />,
+      element: (
+        <PublicLayout>
+          <SignUp />
+        </PublicLayout>
+      ),
     },
   ]);
 

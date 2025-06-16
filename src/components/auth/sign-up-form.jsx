@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Stepper,
@@ -15,6 +16,7 @@ import Step2 from "./steps/step-2";
 import Step3 from "./steps/step-3";
 import { Link } from "react-router-dom";
 import api from "@/lib/axios";
+import { useAuth } from "@/providers/auth-context";
 
 const steps = [
   {
@@ -40,23 +42,36 @@ export function SignUpForm() {
     step2: null,
     step3: null,
   });
+  const { setToken } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleNext = async () => {
     if (currentStep === 1) {
       const data = await step1Ref.current?.validate();
       if (!data) return;
 
+      setLoading(true);
       try {
         await api.post("/auth/register", data);
-        toast.success("Cuenta creada exitosamente");
+
+        const response = await api.post("/auth/login", {
+          email: data.email,
+          password: data.password,
+        });
+
+        const { token } = response.data.data;
+        setToken(token);
         setFormData((prev) => ({ ...prev, step1: data }));
         setCurrentStep((prev) => prev + 1);
+        toast.success("Cuenta creada exitosamente");
       } catch (error) {
-        const { errors } = error.response.data;
         let errorMessage = "Ocurrió un error al registrar el usuario";
 
-        if (errors[0].includes("already taken")) {
-          errorMessage = "Este email ya está registrado";
+        if (error.response?.data?.errors?.[0]) {
+          const err = error.response.data.errors[0];
+          if (err.includes("already taken")) {
+            errorMessage = "Este email ya está registrado";
+          }
         }
 
         toast.error(errorMessage);
@@ -67,6 +82,7 @@ export function SignUpForm() {
       const data = await step2Ref.current?.validate();
       if (!data) return;
 
+      setLoading(true);
       try {
         await api.post("/negocio/register", data);
         toast.success("Negocio creado exitosamente");
@@ -77,6 +93,7 @@ export function SignUpForm() {
         toast.error(message);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -115,7 +132,8 @@ export function SignUpForm() {
 
         {currentStep !== 3 && (
           <>
-            <Button className="w-full" onClick={handleNext} disabled={currentStep > steps.length}>
+            <Button className="w-full" onClick={handleNext} disabled={loading}>
+              {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
               Siguiente
             </Button>
 

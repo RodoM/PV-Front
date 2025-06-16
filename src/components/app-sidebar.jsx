@@ -11,13 +11,9 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useBusiness } from "@/providers/business-context";
 
 const data = {
-  user: {
-    name: "Nombre del usuario",
-    email: "email_usuario@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   routes: [
     {
       title: "Resumen",
@@ -53,6 +49,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }) {
+  const { business } = useBusiness();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -64,8 +62,10 @@ export function AppSidebar({ ...props }) {
                   <Store className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">Nombre del negocio</span>
-                  <span className="text-xs">Plan contratado</span>
+                  <span className="font-medium">
+                    {business ? <>{business.nombre}</> : <>Cargando...</>}
+                  </span>
+                  <span className="text-xs">{business?.email || ""}</span>
                 </div>
               </div>
             </SidebarMenuButton>
@@ -76,7 +76,7 @@ export function AppSidebar({ ...props }) {
         <NavMain items={data.routes} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
