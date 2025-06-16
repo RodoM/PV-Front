@@ -50,7 +50,6 @@ const schema = z
     planSaasId: z.number({
       required_error: "Plan es obligatorio",
     }),
-    debitoAutomaticoActivo: z.boolean().default(false),
   })
   .refine(
     (data) => {
@@ -474,24 +473,6 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
                 </Select>
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="debitoAutomaticoActivo"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Débito automático</FormLabel>
-                <FormDescription>
-                  Marque esta opción si desea que se le realize el débito automático
-                </FormDescription>
-              </div>
             </FormItem>
           )}
         />
