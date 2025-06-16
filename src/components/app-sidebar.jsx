@@ -1,4 +1,4 @@
-import { Store, Settings2, ChartSpline, Package, Tag, MapPin } from "lucide-react";
+import { UserSearch, Store, Settings2, ChartSpline, Package, Tag, MapPin } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -38,6 +38,11 @@ const data = {
       title: "Puestos de Venta",
       url: "/dashboard/puestos",
       icon: MapPin,
+    },
+    {
+      title: "Empleados",
+      url: "/dashboard/empleados",
+      icon: UserSearch,
     },
     {
       title: "Configuraciones",

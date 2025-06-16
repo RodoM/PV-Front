@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { EllipsisVertical, LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,21 +22,21 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import ProductForm from "./product-form";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import EmployeeForm from "./employee-form";
 
 function ActionCell({ row }) {
   const [loading, setLoading] = useState(false);
-  const [disableDialog, setDisableDialog] = useState(false);
-  const [editDialog, setEditDialog] = useState(false);
+  const [showDisable, setShowDisable] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
-  const onSubmit = () => {
-    console.log(`Deshabilitando producto ${row.original.name}`);
+  const onDisable = () => {
+    console.log("Deshabilitando empleado:", row.original.name);
     setLoading(true);
     setTimeout(() => {
-      toast.success("Producto deshabilitado correctamente");
+      toast.success("Empleado deshabilitado correctamente");
       setLoading(false);
-      setDisableDialog(false);
+      setShowDisable(false);
     }, 2000);
   };
 
@@ -51,7 +51,7 @@ function ActionCell({ row }) {
             className="text-red-600"
             onSelect={(e) => {
               e.preventDefault();
-              setDisableDialog(true);
+              setShowDisable(true);
             }}
           >
             {row.original.enabled ? "Deshabilitar" : "Habilitar"}
@@ -59,25 +59,24 @@ function ActionCell({ row }) {
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
-              setEditDialog(true);
+              setShowEdit(true);
             }}
           >
             Editar
           </DropdownMenuItem>
-          <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
+          <AlertDialog open={showDisable} onOpenChange={setShowDisable}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Deshabilitar producto</AlertDialogTitle>
+                <AlertDialogTitle>Deshabilitar empleado</AlertDialogTitle>
                 <AlertDialogDescription>
-                  ¿Estás seguro de que deseas deshabilitar este producto? El mismo no estará
-                  disponible para comprar.
+                  ¿Seguro que deseas deshabilitar al empleado? No podrá acceder al sistema.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <Button variant="outline" onClick={() => setDisableDialog(false)}>
+                <Button variant="outline" onClick={() => setShowDisable(false)}>
                   Cancelar
                 </Button>
-                <Button disabled={loading} onClick={onSubmit}>
+                <Button disabled={loading} onClick={onDisable}>
                   {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
                   Confirmar
                 </Button>
@@ -85,15 +84,13 @@ function ActionCell({ row }) {
             </AlertDialogContent>
           </AlertDialog>
 
-          <Dialog open={editDialog} onOpenChange={setEditDialog}>
+          <Dialog open={showEdit} onOpenChange={setShowEdit}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Editar producto</DialogTitle>
-                <DialogDescription>
-                  Complete el formulario para editar el producto.
-                </DialogDescription>
+                <DialogTitle>Editar empleado</DialogTitle>
+                <DialogDescription>Modificá la información del empleado.</DialogDescription>
               </DialogHeader>
-              <ProductForm product={row.original} closeModal={() => setEditDialog(false)} />
+              <EmployeeForm employee={row.original} closeModal={() => setShowEdit(false)} />
             </DialogContent>
           </Dialog>
         </DropdownMenuContent>
