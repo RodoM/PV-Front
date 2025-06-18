@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import api from "@/lib/axios";
+import { monedas, documentos, facturaciones } from "@/enums/index";
 
 const schema = z
   .object({
@@ -63,31 +64,41 @@ const schema = z
   );
 
 const Step2 = forwardRef(({ defaultValues }, ref) => {
+  const [rubroOptions, setRubroOptions] = useState([]);
   const [planOptions, setPlanOptions] = useState([]);
+
+  const initialValues = {
+    nombre: "",
+    descripcion: "",
+    rubroId: null,
+    pais: "",
+    provincia: "",
+    ciudad: "",
+    codigoPostal: "",
+    calle: "",
+    altura: "",
+    usaFacturacion: false,
+    tipoFacturacion: "",
+    moneda: null,
+    tipoDocumento: null,
+    numeroDocumento: "",
+    email: "",
+    telefono: "",
+    planSaasId: null,
+    ...defaultValues,
+  };
+
+  const convertedValues = {
+    ...initialValues,
+    usaFacturacion: initialValues.tipoFacturacion !== "",
+    tipoFacturacion: facturaciones[initialValues.tipoFacturacion] ?? null,
+    moneda: monedas[initialValues.moneda] ?? null,
+    tipoDocumento: documentos[initialValues.tipoDocumento] ?? null,
+  };
 
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
-      nombre: "",
-      descripcion: "",
-      rubroId: null,
-      pais: "",
-      provincia: "",
-      ciudad: "",
-      codigoPostal: "",
-      calle: "",
-      altura: "",
-      usaFacturacion: false,
-      tipoFacturacion: null,
-      moneda: null,
-      tipoDocumento: null,
-      numeroDocumento: "",
-      email: "",
-      telefono: "",
-      planSaasId: null,
-      debitoAutomaticoActivo: false,
-      ...defaultValues,
-    },
+    defaultValues: convertedValues,
   });
 
   const watchUsaFacturacion = useWatch({
@@ -104,6 +115,13 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
         )();
       }),
   }));
+
+  useEffect(() => {
+    api
+      .get("/rubro/get-all")
+      .then((res) => setRubroOptions(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
 
   useEffect(() => {
     api
@@ -152,18 +170,18 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               <FormControl>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value}
+                  defaultValue={String(field.value)}
+                  disabled={!rubroOptions.length}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccione el rubro" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Vestimenta</SelectItem>
-                    <SelectItem value="1">Comida</SelectItem>
-                    <SelectItem value="2">Electrónica</SelectItem>
-                    <SelectItem value="3">Hogar</SelectItem>
-                    <SelectItem value="4">Transporte</SelectItem>
-                    <SelectItem value="5">Salud</SelectItem>
+                    {rubroOptions.map((rubro) => (
+                      <SelectItem key={rubro.id} value={String(rubro.id)}>
+                        {rubro.nombre}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -324,8 +342,12 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
                 <FormLabel>Tipo de facturación</FormLabel>
                 <FormControl>
                   <Select
+                    value={
+                      field.value !== null && field.value !== undefined
+                        ? String(field.value)
+                        : undefined
+                    }
                     onValueChange={(value) => field.onChange(Number(value))}
-                    defaultValue={field.value}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Seleccione el tipo de facturación" />
@@ -352,8 +374,12 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               <FormLabel>Moneda</FormLabel>
               <FormControl>
                 <Select
+                  value={
+                    field.value !== null && field.value !== undefined
+                      ? String(field.value)
+                      : undefined
+                  }
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccione la moneda" />
@@ -387,8 +413,12 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
                 <FormLabel>Tipo de documento</FormLabel>
                 <FormControl>
                   <Select
+                    value={
+                      field.value !== null && field.value !== undefined
+                        ? String(field.value)
+                        : undefined
+                    }
                     onValueChange={(value) => field.onChange(Number(value))}
-                    defaultValue={field.value}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Seleccione el tipo de documento" />
@@ -457,7 +487,7 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               <FormControl>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value}
+                  defaultValue={String(field.value)}
                   disabled={!planOptions.length}
                 >
                   <SelectTrigger className="w-full">

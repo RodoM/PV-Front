@@ -12,7 +12,7 @@ function Step3({ email }) {
         utilizar nuestros servicios.
       </p>
       <Button>
-        <a href="/">Volver al inicio</a>
+        <a href="/dashboard/resumen">Ir al dashboard</a>
       </Button>
     </div>
   );
