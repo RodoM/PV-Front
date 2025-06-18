@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export function Cta() {
   return (
@@ -26,10 +27,10 @@ export function Cta() {
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
             <Button asChild size="lg" variant="secondary" className="min-[400px]:mr-4">
-              <a href="/registrarse">Registrar mi negocio</a>
+              <Link to="/registrarse">Registrar mi negocio</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="/iniciar-sesión">Iniciar sesión</a>
+              <Link to="/iniciar-sesion">Iniciar sesión</Link>
             </Button>
           </div>
           <p className="text-sm text-primary-foreground/80">Prueba gratuita por 30 días.</p>

@@ -1,5 +1,6 @@
 import { PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 function Step3({ email }) {
   return (
@@ -12,7 +13,7 @@ function Step3({ email }) {
         utilizar nuestros servicios.
       </p>
       <Button>
-        <a href="/dashboard/resumen">Ir al dashboard</a>
+        <Link to="/dashboard/resumen">Ir al dashboard</Link>
       </Button>
     </div>
   );
