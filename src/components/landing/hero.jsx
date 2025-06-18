@@ -49,7 +49,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex items-center justify-center"
         >
-          <img src="src/assets/landing-example.png" alt="Ejemplo de aplicación" />
+          <img src="images/landing-example.png" alt="Ejemplo de aplicación" />
         </motion.div>
       </div>
     </section>
