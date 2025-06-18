@@ -25,7 +25,7 @@ const schema = z.object({
 });
 
 export function SignInForm() {
-  const { setToken } = useAuth();
+  const { setToken, user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -46,7 +46,12 @@ export function SignInForm() {
       .then((response) => {
         const { token } = response.data.data;
         setToken(token);
-        navigate("/dashboard/resumen");
+
+        if (user && !user.negocioId) {
+          navigate("/registrarse");
+        } else {
+          navigate("/dashboard/resumen");
+        }
       })
       .catch((error) => {
         const message = error.response?.data?.message || "Error al iniciar sesión";

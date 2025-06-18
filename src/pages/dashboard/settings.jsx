@@ -28,16 +28,21 @@ function Settings() {
     }
   };
 
-  if (!business) return <div>Cargando...</div>;
+  if (!business)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoaderCircle className="w-5 h-5 animate-spin" />
+      </div>
+    );
 
   return (
     <div>
       <Step2 ref={step2Ref} defaultValues={business} />
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-4 mt-4">
-        <Button variant="destructive" className="w-full md:w-fit">
+        {/* <Button variant="destructive" className="w-full md:w-fit">
           Deshablitar negocio
-        </Button>
-        <Button className="w-full md:w-fit" onClick={handleSubmit} disabled={loading}>
+        </Button> */}
+        <Button className="w-full md:w-fit md:ml-auto" onClick={handleSubmit} disabled={loading}>
           {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
           Actualizar datos
         </Button>

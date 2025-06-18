@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,8 +42,12 @@ export function SignUpForm() {
     step2: null,
     step3: null,
   });
-  const { setToken } = useAuth();
+  const { setToken, user } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user && !user.negocioId) setCurrentStep(2);
+  }, [user]);
 
   const handleNext = async () => {
     if (currentStep === 1) {

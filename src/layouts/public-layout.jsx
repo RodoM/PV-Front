@@ -2,10 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth-context";
 
 function PublicLayout({ children }) {
-  const { isAuthenticated } = useAuth();
-  const negocioAsignado = false;
+  const { user } = useAuth();
 
-  if (isAuthenticated && negocioAsignado) return <Navigate to="/dashboard/resumen" />;
+  if (!!user && user.negocioId) return <Navigate to="/dashboard/resumen" />;
   return children;
 }
 

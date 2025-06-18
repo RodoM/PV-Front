@@ -64,6 +64,7 @@ const schema = z
   );
 
 const Step2 = forwardRef(({ defaultValues }, ref) => {
+  const [rubroOptions, setRubroOptions] = useState([]);
   const [planOptions, setPlanOptions] = useState([]);
 
   const initialValues = {
@@ -117,6 +118,13 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
 
   useEffect(() => {
     api
+      .get("/rubro/get-all")
+      .then((res) => setRubroOptions(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    api
       .get("/plan/get-all")
       .then((res) => setPlanOptions(res.data.data))
       .catch((err) => console.log(err));
@@ -162,18 +170,18 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
               <FormControl>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value}
+                  defaultValue={String(field.value)}
+                  disabled={!rubroOptions.length}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccione el rubro" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Vestimenta</SelectItem>
-                    <SelectItem value="1">Comida</SelectItem>
-                    <SelectItem value="2">Electrónica</SelectItem>
-                    <SelectItem value="3">Hogar</SelectItem>
-                    <SelectItem value="4">Transporte</SelectItem>
-                    <SelectItem value="5">Salud</SelectItem>
+                    {rubroOptions.map((rubro) => (
+                      <SelectItem key={rubro.id} value={String(rubro.id)}>
+                        {rubro.nombre}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>

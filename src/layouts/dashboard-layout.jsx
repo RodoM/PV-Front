@@ -14,7 +14,7 @@ function DashboardLayout() {
 
   useEffect(() => {
     api
-      .get("/negocio/get-by-id/7")
+      .get("/negocio")
       .then((response) => {
         const { data } = response.data;
         setBusiness(data);
