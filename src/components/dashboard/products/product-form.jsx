@@ -289,7 +289,17 @@ function ProductForm({ product, onProductAdded, closeModal }) {
                       <SelectValue placeholder="Seleccione la u. de medida" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0">Gramos</SelectItem>
+                      <SelectItem value="0">Unidad</SelectItem>
+                      <SelectItem value="1">Par</SelectItem>
+                      <SelectItem value="2">Docena</SelectItem>
+                      <SelectItem value="4">Gramo</SelectItem>
+                      <SelectItem value="5">Kilogramo</SelectItem>
+                      <SelectItem value="6">Litro</SelectItem>
+                      <SelectItem value="7">Milimetro</SelectItem>
+                      <SelectItem value="8">Centimetro</SelectItem>
+                      <SelectItem value="9">Metro</SelectItem>
+                      <SelectItem value="10">Metro cuadrado</SelectItem>
+                      <SelectItem value="11">Centimetro cuadrado</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
