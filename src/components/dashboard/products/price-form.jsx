@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
 import { LoaderCircle } from "lucide-react";
 import {
   Form,
@@ -23,6 +24,7 @@ const schema = z.object({
 });
 
 function PriceForm({ productoNegocioId, closeModal }) {
+  const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
@@ -44,6 +46,7 @@ function PriceForm({ productoNegocioId, closeModal }) {
       .post("/precio/register", data)
       .then(() => {
         toast.success("Precio cargado correctamente");
+        triggerRefresh();
         onClose();
       })
       .catch((error) => {
