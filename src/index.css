@@ -7,6 +7,27 @@ html {
   scroll-behavior: smooth;
 }
 
+.scrollable {
+  overflow: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #a0aec0 transparent; /* Firefox: thumb y track */
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 4px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -1,43 +1,32 @@
-import { ArrowUpDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Package } from "lucide-react";
 import ActionCell from "./action-cell";
 
 export const columns = [
   {
-    accessorKey: "id",
+    accessorKey: "productoNegocioId",
     header: "ID",
   },
   {
-    accessorKey: "name",
+    accessorKey: "nombre",
     header: "Nombre",
   },
   {
-    accessorKey: "stock",
-    header: ({ column }) => {
+    accessorKey: "stockActual",
+    header: "Stock",
+    cell: ({ row }) => {
+      const stockActual = row.original.stockActual;
+
       return (
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Stock
-          <ArrowUpDown className="h-4 w-4" />
+        <div className="flex items-center gap-1">
+          <Package className="h-4 w-4 text-muted-foreground" />
+          {stockActual > 0 ? stockActual : "Sin stock"}
         </div>
       );
     },
   },
   {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Precio
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
+    accessorKey: "precioActivo",
+    header: "Precio",
     cell: ({ row }) => {
       const formatoARS = new Intl.NumberFormat("es-AR", {
         style: "currency",
@@ -45,15 +34,9 @@ export const columns = [
         minimumFractionDigits: 2,
       });
 
-      return formatoARS.format(row.original.price);
-    },
-  },
-  {
-    accessorKey: "enabled",
-    header: "Estado",
-    cell: ({ row }) => {
-      const state = row.original.enabled ? "active" : "inactive";
-      return <Badge variant={state}>{row.original.enabled ? "Activo" : "Inactivo"}</Badge>;
+      const hasPrice = row.original.precioActivo !== null;
+
+      return hasPrice ? formatoARS.format(row.original.precioActivo) : "Sin precio";
     },
   },
   {
