@@ -47,7 +47,7 @@ const schema = z.object({
   }),
   codigoBarra: z.string().nonempty("Código de barras es obligatorio"),
   descripcion: z.string().optional(),
-  imageUrl: z.string().optional(),
+  imagenUrl: z.string().optional(),
   ubicacion: z.string().optional(),
   stockActual: z.preprocess(
     (val) => Number(val),
@@ -77,7 +77,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
       tipoUnidadMedida: product?.tipoUnidadMedida || "",
       codigoBarra: product?.codigoBarra || "",
       descripcion: product?.descripcion || "",
-      imageUrl: product?.imageUrl || "",
+      imagenUrl: product?.imagenUrl || "",
       ubicacion: product?.ubicacion || "",
       stockActual: product?.stockActual || 0,
       stockMinimo: product?.stockMinimo || 0,
@@ -140,7 +140,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
       productoNegocioRequest: {
         negocioId: user.negocioId,
         descripcion: data.descripcion,
-        imagenUrl: data.imageUrl,
+        imagenUrl: data.imagenUrl,
         ubicacion: data.ubicacion,
         stockActual: Number(data.stockActual),
         stockMinimo: Number(data.stockMinimo),
@@ -336,7 +336,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
 
         <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
-            name="imageUrl"
+            name="imagenUrl"
             control={form.control}
             render={({ field }) => (
               <FormItem className="w-full">

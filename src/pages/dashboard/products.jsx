@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
 import DataTable from "@/components/ui/data-table";
 import { columns } from "@/components/dashboard/products/columns";
 import {
@@ -18,7 +19,7 @@ function Products() {
   const [pageCount, setPageCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const { refreshKey, triggerRefresh } = useRefresh();
 
   useEffect(() => {
     setLoading(true);
@@ -55,10 +56,7 @@ function Products() {
             <DialogTitle>Agregar producto</DialogTitle>
             <DialogDescription>Complete el formulario para agregar un producto.</DialogDescription>
           </DialogHeader>
-          <ProductForm
-            onProductAdded={() => setRefreshKey(refreshKey + 1)}
-            closeModal={() => setAddDialog(false)}
-          />
+          <ProductForm onProductAdded={triggerRefresh} closeModal={() => setAddDialog(false)} />
         </DialogContent>
       </Dialog>
     </>

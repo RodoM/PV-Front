@@ -30,7 +30,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import ProductForm from "./product-form";
+import UpdateProductForm from "./update-product-form";
 import PriceForm from "./price-form";
 import HistoricalPrices from "./historical-prices";
 import { toast } from "sonner";
@@ -62,6 +62,15 @@ function ActionCell({ row }) {
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
+              setEditDialog(true);
+            }}
+          >
+            <Pencil className="h-4 w-4" />
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
               setPriceDialog(true);
             }}
           >
@@ -76,15 +85,6 @@ function ActionCell({ row }) {
           >
             <History className="h-4 w-4" />
             Ver historico de precios
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault();
-              setEditDialog(true);
-            }}
-          >
-            <Pencil className="h-4 w-4" />
-            Editar
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-red-600"
@@ -154,10 +154,10 @@ function ActionCell({ row }) {
               <DialogHeader>
                 <DialogTitle>Editar producto</DialogTitle>
                 <DialogDescription>
-                  Complete el formulario para editar el producto.
+                  Complete el formulario para editar {row.original.nombre}.
                 </DialogDescription>
               </DialogHeader>
-              <ProductForm product={row.original} closeModal={() => setEditDialog(false)} />
+              <UpdateProductForm product={row.original} closeModal={() => setEditDialog(false)} />
             </DialogContent>
           </Dialog>
         </DropdownMenuContent>
