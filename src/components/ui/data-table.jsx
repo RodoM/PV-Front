@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   getSortedRowModel,
   getFilteredRowModel,
@@ -26,14 +26,32 @@ function DataTable({
   pageSize,
   pageNumber,
   pageCount,
+  searchValue,
   onPageChange,
   onPageSizeChange,
+  onSearchChange,
   filterKey,
   filterLabel,
   addDialog,
 }) {
+  const [inputValue, setInputValue] = useState(searchValue);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
+
+  useEffect(() => {
+    setInputValue(searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (inputValue?.length >= 3 || inputValue === "") {
+        onSearchChange(inputValue);
+        onPageChange(1);
+      }
+    }, 100);
+
+    return () => clearTimeout(handler);
+  }, [inputValue]);
 
   const table = useReactTable({
     data,
@@ -67,10 +85,8 @@ function DataTable({
         {filterKey && (
           <Input
             placeholder={`Buscar ${filterLabel}...`}
-            value={table.getColumn(`${filterKey}`)?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn(`${filterKey}`)?.setFilterValue(event.target.value)
-            }
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             className="max-w-sm"
           />
         )}

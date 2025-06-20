@@ -89,7 +89,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
 
   useEffect(() => {
     api
-      .get("/categoria/get-all")
+      .get("/category/list")
       .then((res) => {
         setCategories(res.data.data.data);
       })
@@ -100,7 +100,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
 
   useEffect(() => {
     api
-      .get("/marca/get-all")
+      .get("/brand/list")
       .then((res) => {
         setBrands(res.data.data.data);
       })
@@ -111,7 +111,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
 
   useEffect(() => {
     api
-      .get("/rubro/get-all")
+      .get("/sector/list")
       .then((res) => {
         setIndustries(res.data.data);
       })
@@ -151,7 +151,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
     setLoading(true);
 
     api
-      .post("/producto/register", formattedData)
+      .post("/product/register", formattedData)
       .then(() => {
         toast.success("Producto agregado correctamente");
         onProductAdded();
@@ -292,14 +292,14 @@ function ProductForm({ product, onProductAdded, closeModal }) {
                       <SelectItem value="0">Unidad</SelectItem>
                       <SelectItem value="1">Par</SelectItem>
                       <SelectItem value="2">Docena</SelectItem>
-                      <SelectItem value="4">Gramo</SelectItem>
-                      <SelectItem value="5">Kilogramo</SelectItem>
-                      <SelectItem value="6">Litro</SelectItem>
-                      <SelectItem value="7">Milimetro</SelectItem>
-                      <SelectItem value="8">Centimetro</SelectItem>
-                      <SelectItem value="9">Metro</SelectItem>
-                      <SelectItem value="10">Metro cuadrado</SelectItem>
-                      <SelectItem value="11">Centimetro cuadrado</SelectItem>
+                      <SelectItem value="3">Gramo</SelectItem>
+                      <SelectItem value="4">Kilogramo</SelectItem>
+                      <SelectItem value="5">Litro</SelectItem>
+                      <SelectItem value="6">Milimetro</SelectItem>
+                      <SelectItem value="7">Centimetro</SelectItem>
+                      <SelectItem value="8">Metro</SelectItem>
+                      <SelectItem value="9">Metro cuadrado</SelectItem>
+                      <SelectItem value="10">Centimetro cuadrado</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>

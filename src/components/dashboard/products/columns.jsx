@@ -11,6 +11,18 @@ export const columns = [
     header: "Nombre",
   },
   {
+    accessorKey: "marca.nombre",
+    header: "Marca",
+  },
+  {
+    accessorKey: "rubro.nombre",
+    header: "Rubro",
+  },
+  {
+    accessorKey: "categoria.nombre",
+    header: "Categoría",
+  },
+  {
     accessorKey: "stockActual",
     header: "Stock",
     cell: ({ row }) => {
@@ -19,7 +31,9 @@ export const columns = [
       return (
         <div className="flex items-center gap-1">
           <Package className="h-4 w-4 text-muted-foreground" />
-          {stockActual > 0 ? stockActual : "Sin stock"}
+          {stockActual > 0
+            ? `${stockActual} ${row.original.tipoUnidadMedida.toLowerCase()}`
+            : "Sin stock"}
         </div>
       );
     },

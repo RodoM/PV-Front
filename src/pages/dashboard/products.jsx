@@ -17,6 +17,7 @@ function Products() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [pageCount, setPageCount] = useState(0);
+  const [nombre, setNombre] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const { refreshKey, triggerRefresh } = useRefresh();
@@ -24,7 +25,7 @@ function Products() {
   useEffect(() => {
     setLoading(true);
     api
-      .get("/productoNegocio/get-all", { params: { pageNumber, pageSize } })
+      .get("/businessproduct/list", { params: { pageNumber, pageSize, nombre } })
       .then((res) => {
         const { data } = res.data;
         setData(data.data);
@@ -32,7 +33,7 @@ function Products() {
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, [pageNumber, pageSize, refreshKey]);
+  }, [pageNumber, pageSize, nombre, refreshKey]);
 
   return (
     <>
@@ -43,8 +44,10 @@ function Products() {
         pageSize={pageSize}
         pageNumber={pageNumber}
         pageCount={pageCount}
+        searchValue={nombre}
         onPageChange={(pageNumber) => setPageNumber(pageNumber)}
         onPageSizeChange={(pageSize) => setPageSize(pageSize)}
+        onSearchChange={setNombre}
         filterKey="nombre"
         filterLabel="producto"
         addDialog={() => setAddDialog(true)}

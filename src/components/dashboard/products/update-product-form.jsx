@@ -61,7 +61,7 @@ function UpdateProductForm({ product, closeModal }) {
   const onSubmit = (data) => {
     setLoading(true);
     api
-      .put("/productoNegocio/modify", data, {
+      .put("/businessproduct/modify", data, {
         params: { productosNegocioId: product.productoNegocioId },
       })
       .then(() => {

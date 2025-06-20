@@ -1,28 +1,11 @@
 import { useState } from "react";
-import {
-  CirclePlus,
-  EllipsisVertical,
-  LoaderCircle,
-  History,
-  Pencil,
-  Ban,
-  RotateCcw,
-} from "lucide-react";
+import { CirclePlus, EllipsisVertical, History, Pencil } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,24 +16,11 @@ import {
 import UpdateProductForm from "./update-product-form";
 import PriceForm from "./price-form";
 import HistoricalPrices from "./historical-prices";
-import { toast } from "sonner";
 
 function ActionCell({ row }) {
-  const [loading, setLoading] = useState(false);
-  const [disableDialog, setDisableDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [priceDialog, setPriceDialog] = useState(false);
   const [historyDialog, setHistoryDialog] = useState(false);
-
-  const onSubmit = () => {
-    console.log(`Deshabilitando producto ${row.original.name}`);
-    setLoading(true);
-    setTimeout(() => {
-      toast.success("Producto deshabilitado correctamente");
-      setLoading(false);
-      setDisableDialog(false);
-    }, 2000);
-  };
 
   return (
     <>
@@ -86,41 +56,6 @@ function ActionCell({ row }) {
             <History className="h-4 w-4" />
             Ver historico de precios
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-red-600"
-            onSelect={(e) => {
-              e.preventDefault();
-              setDisableDialog(true);
-            }}
-          >
-            {row.original.enabled ? (
-              <Ban className="text-red-600 h-4 w-4" />
-            ) : (
-              <RotateCcw className="text-red-600 h-4 w-4" />
-            )}
-            {row.original.enabled ? "Deshabilitar" : "Habilitar"}
-          </DropdownMenuItem>
-
-          <AlertDialog open={disableDialog} onOpenChange={setDisableDialog}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Deshabilitar producto</AlertDialogTitle>
-                <AlertDialogDescription>
-                  ¿Estás seguro de que deseas deshabilitar este producto? El mismo no estará
-                  disponible para comprar.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <Button variant="outline" onClick={() => setDisableDialog(false)}>
-                  Cancelar
-                </Button>
-                <Button disabled={loading} onClick={onSubmit}>
-                  {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
-                  Confirmar
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
 
           <Dialog open={priceDialog} onOpenChange={setPriceDialog}>
             <DialogContent className="h-screen md:h-auto md:max-h-[500px] 2xl:max-h-[650px] overflow-y-auto scrollable">

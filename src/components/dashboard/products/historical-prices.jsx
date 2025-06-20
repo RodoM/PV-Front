@@ -21,7 +21,7 @@ function HistoricalPrices({ productoNegocioId }) {
   useEffect(() => {
     setLoading(true);
     api
-      .get(`/precio/get-historical/${productoNegocioId}`, {
+      .get(`/price/history/bybusinessproduct/${productoNegocioId}`, {
         params: { fechaDesde: fechaLunes, fechaHasta: fechaHoy },
       })
       .then((res) => {

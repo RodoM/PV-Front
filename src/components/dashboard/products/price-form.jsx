@@ -43,7 +43,7 @@ function PriceForm({ productoNegocioId, closeModal }) {
   const onSubmit = (data) => {
     setLoading(true);
     api
-      .post("/precio/register", data)
+      .post("/price/register", data)
       .then(() => {
         toast.success("Precio cargado correctamente");
         triggerRefresh();

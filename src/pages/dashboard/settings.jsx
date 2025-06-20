@@ -17,7 +17,7 @@ function Settings() {
 
     try {
       setLoading(true);
-      await api.put("/negocio/modify", { ...data, negocioId: business.id });
+      await api.put("/business/modify", { ...data, negocioId: business.id });
       setBusiness({ ...data, id: business.id });
       toast.success("Datos actualizados exitosamente");
     } catch (error) {

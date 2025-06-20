@@ -88,7 +88,7 @@ export function SignUpForm() {
 
       setLoading(true);
       try {
-        await api.post("/negocio/register", data);
+        await api.post("/business/register", data);
         toast.success("Negocio creado exitosamente");
         setFormData((prev) => ({ ...prev, step2: data }));
         setCurrentStep((prev) => prev + 1);
