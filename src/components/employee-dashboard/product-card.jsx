@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
-import { tipoUnidadMedidas, unidadesCompatibles, factoresConversion } from "@/enums/index";
+import { tipoUnidadMedidas, unidadesCompatibles } from "@/enums/index";
 
 export function ProductCard({ cartItems, product, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
@@ -18,17 +18,8 @@ export function ProductCard({ cartItems, product, onAddToCart }) {
     tipoUnidadMedidas[product.tipoUnidadMedida]
   );
 
-  const unidadSeleccionada = Object.keys(tipoUnidadMedidas).find(
-    (key) => tipoUnidadMedidas[key] === tipoUnidadMedida
-  );
-
-  const calcularStockDisponible = () => {
-    const factor = factoresConversion[product.tipoUnidadMedida]?.[unidadSeleccionada] ?? 1;
-    return Math.floor(product.stockActual * factor);
-  };
-
   const handleAddToCart = () => {
-    if (quantity > 0 && quantity <= calcularStockDisponible()) {
+    if (quantity > 0) {
       onAddToCart(
         {
           ...product,
@@ -43,7 +34,7 @@ export function ProductCard({ cartItems, product, onAddToCart }) {
 
   const handleQuantityChange = (value) => {
     const num = Number.parseFloat(value) || 0;
-    if (num >= 0 && num <= calcularStockDisponible()) {
+    if (num >= 0) {
       setQuantity(num);
     }
   };
@@ -80,18 +71,12 @@ export function ProductCard({ cartItems, product, onAddToCart }) {
             <Input
               type="number"
               min="1"
-              max={calcularStockDisponible()}
               step="any"
               value={quantity}
               onChange={(e) => handleQuantityChange(e.target.value)}
               className="w-16 h-8 text-center appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <Button
-              onClick={handleAddToCart}
-              disabled={quantity === 0 || quantity > calcularStockDisponible()}
-              size="sm"
-              className="flex-1"
-            >
+            <Button onClick={handleAddToCart} size="sm" className="flex-1">
               <Plus className="w-4 h-4 md:mr-1" />
               <span className="hidden md:block">Agregar</span>
             </Button>

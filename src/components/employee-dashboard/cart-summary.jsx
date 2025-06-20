@@ -205,10 +205,11 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
                             <SelectValue placeholder="Seleccione la forma de pago" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="0">Efectivo</SelectItem>
-                            <SelectItem value="1">Tarjeta de crédito</SelectItem>
-                            <SelectItem value="2">Tarjeta de débito</SelectItem>
-                            <SelectItem value="3">Transferencia bancaria</SelectItem>
+                            <SelectItem value="0">Tarjeta de crédito</SelectItem>
+                            <SelectItem value="1">Tarjeta de débito</SelectItem>
+                            <SelectItem value="2">Transferencia bancaria</SelectItem>
+                            <SelectItem value="3">Paypal</SelectItem>
+                            <SelectItem value="4">Mercado Pago</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -232,8 +233,12 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
                             <SelectValue placeholder="Seleccione el comprobante" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="0">Ninguno</SelectItem>
-                            <SelectItem value="1">Factura A</SelectItem>
+                            <SelectItem value="0">Venta</SelectItem>
+                            <SelectItem value="1">Consumo interno</SelectItem>
+                            <SelectItem value="2">Anulación venta</SelectItem>
+                            <SelectItem value="3">Anulación consumo interno</SelectItem>
+                            <SelectItem value="4">Compra</SelectItem>
+                            <SelectItem value="5">Anulación compra</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
