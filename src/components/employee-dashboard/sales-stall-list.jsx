@@ -1,44 +1,13 @@
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import SalesStall from "@/components/employee-dashboard/sales-stall";
 
-const SalesStallsList = ({ data, children }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const [filteredData, setFilteredData] = useState(data);
-
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredData(data);
-      return;
-    }
-
-    const searchLower = searchQuery.toLowerCase();
-
-    const filtered = data.filter((puesto) => {
-      return (
-        puesto.name.toLowerCase().includes(searchLower) ||
-        puesto.location.toLowerCase().includes(searchLower)
-      );
-    });
-
-    setFilteredData(filtered);
-  }, [searchQuery, data]);
+const SalesStallsList = ({ stalls }) => {
+  if (!stalls) return null;
 
   return (
-    <div className="space-y-6">
-      <div className="relative max-w-md">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Buscar puestos..."
-          className="pl-8"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
-      {children(filteredData)}
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+      {stalls.map((stall) => (
+        <SalesStall key={stall.id} stall={stall} />
+      ))}
     </div>
   );
 };

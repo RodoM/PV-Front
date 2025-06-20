@@ -1,6 +1,6 @@
 import { ProductCard } from "./product-card";
 
-export function ProductList({ products, onAddToCart }) {
+export function ProductList({ cartItems, products, onAddToCart }) {
   if (products.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
@@ -14,9 +14,16 @@ export function ProductList({ products, onAddToCart }) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
-      ))}
+      {products
+        .filter((product) => product.precioActivo)
+        .map((product) => (
+          <ProductCard
+            key={product.productoNegocioId}
+            cartItems={cartItems}
+            product={product}
+            onAddToCart={onAddToCart}
+          />
+        ))}
     </div>
   );
 }

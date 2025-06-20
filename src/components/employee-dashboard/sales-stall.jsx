@@ -15,11 +15,11 @@ const SalesStall = ({ stall }) => {
   return (
     <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-1">
       <CardHeader>
-        <CardTitle>{stall.name}</CardTitle>
+        <CardTitle>{stall.nombre}</CardTitle>
         <CardDescription>{stall.location}</CardDescription>
       </CardHeader>
       <CardContent>
-        {stall.enabled ? (
+        {stall.activo ? (
           <span className="text-green-600 font-medium">Activo</span>
         ) : (
           <span className="text-red-600 font-medium">Inactivo</span>
@@ -27,10 +27,10 @@ const SalesStall = ({ stall }) => {
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button
-          onClick={() => navigate(`/puestos/${stall.id}`)}
+          onClick={() => navigate(`/puestos/${stall.id}?name=${stall.nombre}`)}
           className="transition-all duration-200 hover:scale-105 hover:bg-primary/90 w-full max-w-[200px] cursor-pointer"
         >
-          Ver detalles
+          Ingresar
         </Button>
       </CardFooter>
     </Card>
