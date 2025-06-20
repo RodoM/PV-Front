@@ -1,60 +1,94 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
+import { tipoUnidadMedidas, unidadesCompatibles, factoresConversion } from "@/enums/index";
 
-export function ProductCard({ product, onAddToCart }) {
+export function ProductCard({ cartItems, product, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
+  const [tipoUnidadMedida, setTipoUnidadMedida] = useState(
+    tipoUnidadMedidas[product.tipoUnidadMedida]
+  );
+
+  const unidadSeleccionada = Object.keys(tipoUnidadMedidas).find(
+    (key) => tipoUnidadMedidas[key] === tipoUnidadMedida
+  );
+
+  const calcularStockDisponible = () => {
+    const factor = factoresConversion[product.tipoUnidadMedida]?.[unidadSeleccionada] ?? 1;
+    return Math.floor(product.stockActual * factor);
+  };
 
   const handleAddToCart = () => {
-    if (quantity > 0 && quantity <= product.stock) {
-      onAddToCart(product, quantity);
+    if (quantity > 0 && quantity <= calcularStockDisponible()) {
+      onAddToCart(
+        {
+          ...product,
+          tipoUnidadMedida: tipoUnidadMedidas[product.tipoUnidadMedida],
+          unidadSeleccionada: tipoUnidadMedida,
+        },
+        quantity
+      );
       setQuantity(1);
     }
   };
 
   const handleQuantityChange = (value) => {
-    const num = Number.parseInt(value) || 0;
-    if (num >= 0 && num <= product.stock) {
+    const num = Number.parseFloat(value) || 0;
+    if (num >= 0 && num <= calcularStockDisponible()) {
       setQuantity(num);
     }
   };
+
+  const isDisabled = cartItems.some((item) => item.productoNegocioId === product.productoNegocioId);
 
   return (
     <Card className="h-full hover:shadow-md transition-shadow">
       <CardContent>
         <div className="aspect-square relative mb-3 rounded-lg overflow-hidden">
           <img
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
+            src={product.imagenUrl || "/images/placeholder.svg"}
+            alt={product.nombre}
             className="object-cover"
           />
         </div>
 
         <div className="space-y-2">
           <div>
-            <h3 className="font-semibold text-sm line-clamp-2">{product.name}</h3>
-            <p className="text-xs text-gray-600">{product.brand}</p>
+            <h3 className="font-semibold text-sm line-clamp-2">{product.nombre}</h3>
+            <p className="text-xs text-muted-foreground">{product.marca.nombre}</p>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-            <span className="font-bold text-lg">${product.price.toFixed(2)}</span>
-            <span className="text-xs text-gray-500">Stock: {product.stock}</span>
+            <span className="font-bold text-lg">${product.precioActivo}</span>
+            <span className="text-xs text-muted-foreground">
+              {product.stockActual > 0
+                ? `Stock: ${product.stockActual} ${product.tipoUnidadMedida.toLowerCase()}`
+                : "Sin stock"}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
             <Input
               type="number"
               min="1"
-              max={product.stock}
+              max={calcularStockDisponible()}
+              step="any"
               value={quantity}
               onChange={(e) => handleQuantityChange(e.target.value)}
               className="w-16 h-8 text-center appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             <Button
               onClick={handleAddToCart}
-              disabled={quantity === 0 || quantity > product.stock}
+              disabled={quantity === 0 || quantity > calcularStockDisponible()}
               size="sm"
               className="flex-1"
             >
@@ -62,6 +96,23 @@ export function ProductCard({ product, onAddToCart }) {
               <span className="hidden md:block">Agregar</span>
             </Button>
           </div>
+
+          <Select
+            onValueChange={(value) => setTipoUnidadMedida(Number(value))}
+            defaultValue={tipoUnidadMedidas[product.tipoUnidadMedida].toString()}
+            disabled={isDisabled}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Seleccione la u. de medida" />
+            </SelectTrigger>
+            <SelectContent>
+              {unidadesCompatibles[product.tipoUnidadMedida].map((unidad) => (
+                <SelectItem key={unidad} value={tipoUnidadMedidas[unidad].toString()}>
+                  {unidad}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
     </Card>

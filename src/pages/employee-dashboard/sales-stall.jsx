@@ -1,120 +1,57 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import api from "@/lib/axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useTheme } from "@/providers/theme-provider";
+import { useRefresh } from "@/providers/refresh-context";
 import { Input } from "@/components/ui/input";
-import { Moon, Sun, Search } from "lucide-react";
+import { Moon, Sun, Search, LoaderCircle } from "lucide-react";
 import { BarcodeScanner } from "@/components/employee-dashboard/barcode-scanner";
 import { ProductList } from "@/components/employee-dashboard/product-list";
 import { CartSummary } from "@/components/employee-dashboard/cart-summary";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/providers/theme-provider";
-import { useNavigate } from "react-router-dom";
-
-const SAMPLE_PRODUCTS = [
-  {
-    id: "1",
-    name: "Coca Cola 600ml",
-    brand: "Coca Cola",
-    price: 2.5,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 50,
-    barcode: "7501055363057",
-  },
-  {
-    id: "2",
-    name: "Pan Integral",
-    brand: "Bimbo",
-    price: 3.2,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 25,
-    barcode: "7501030415041",
-  },
-  {
-    id: "3",
-    name: "Leche Entera 1L",
-    brand: "Lala",
-    price: 4.8,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 30,
-    barcode: "7501020206043",
-  },
-  {
-    id: "4",
-    name: "Arroz Blanco 1kg",
-    brand: "Verde Valle",
-    price: 5.5,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 40,
-    barcode: "7501005102063",
-  },
-  {
-    id: "5",
-    name: "Aceite de Cocina 1L",
-    brand: "Capullo",
-    price: 8.9,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 20,
-    barcode: "7501008042014",
-  },
-  {
-    id: "6",
-    name: "Huevos 12 piezas",
-    brand: "San Juan",
-    price: 6.2,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 35,
-    barcode: "7501234567890",
-  },
-  {
-    id: "7",
-    name: "Yogurt Natural 1L",
-    brand: "Danone",
-    price: 7.3,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 15,
-    barcode: "7501015123456",
-  },
-  {
-    id: "8",
-    name: "Pasta Espagueti 500g",
-    brand: "Barilla",
-    price: 4.5,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 60,
-    barcode: "8076809513821",
-  },
-  {
-    id: "9",
-    name: "Memoria RAM 8gb DDR4 3200MHz",
-    brand: "Kingston",
-    price: 2.5,
-    image: "/placeholder.svg?height=200&width=200",
-    stock: 10,
-    barcode: "740617319439",
-  },
-];
 
 export default function PuntoDeVenta() {
-  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { theme, setTheme } = useTheme();
+  const { refreshKey, triggerRefresh } = useRefresh();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItems, setCartItems] = useState([]);
 
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/businessproduct/list", {
+        params: { pageNumber: 1, pageSize: 1000 },
+      })
+      .then((res) => {
+        const { data } = res.data;
+        setData(data.data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [refreshKey]);
+
   const filteredProducts = useMemo(() => {
-    return SAMPLE_PRODUCTS.filter(
+    return data.filter(
       (product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchTerm.toLowerCase())
+        product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.marca.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [data, searchTerm]);
 
   const handleAddToCart = (product, quantity) => {
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
+      const existingItem = prevItems.find(
+        (item) => item.productoNegocioId === product.productoNegocioId
+      );
 
       if (existingItem) {
         return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: Math.min(item.quantity + quantity, item.stock) }
+          item.productoNegocioId === product.productoNegocioId
+            ? { ...item, quantity: Math.min(item.quantity + quantity, item.stockActual) }
             : item
         );
       } else {
@@ -125,26 +62,18 @@ export default function PuntoDeVenta() {
 
   const handleUpdateQuantity = (id, quantity) => {
     setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prevItems.map((item) => (item.productoNegocioId === id ? { ...item, quantity } : item))
     );
   };
 
   const handleRemoveItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const handleConfirmPurchase = (data) => {
-    console.log("Compra confirmada:", { data, items: cartItems });
-
-    setCartItems([]);
-
-    toast.success(`¡Compra confirmada para ${data.email}!`);
+    setCartItems((prevItems) => prevItems.filter((item) => item.productoNegocioId !== id));
   };
 
   return (
     <div className="flex flex-1 flex-col min-h-screen p-4">
       <header className="flex items-center mb-6">
-        <h1 className="text-3xl font-bold mb-2">Puesto #</h1>
+        <h1 className="text-3xl font-bold mb-2">Puesto "{searchParams.get("name")}"</h1>
         <Button
           variant="destructive"
           className="ml-auto mr-4"
@@ -171,12 +100,29 @@ export default function PuntoDeVenta() {
                   className="pl-10"
                 />
               </div>
-              <BarcodeScanner products={SAMPLE_PRODUCTS} onAddToCart={handleAddToCart} />
+              <BarcodeScanner products={data} onAddToCart={handleAddToCart} />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <LoaderCircle className="h-4 w-4 animate-spin mx-auto my-5" />
+              </div>
+            ) : !data.length ? (
+              <div className="flex items-center justify-center h-64 text-gray-500">
+                <div className="text-center">
+                  <p className="text-lg">No hay productos disponibles</p>
+                  <p className="text-sm">Agrega productos para comenzar</p>
+                </div>
+              </div>
+            ) : (
+              <ProductList
+                cartItems={cartItems}
+                products={filteredProducts}
+                onAddToCart={handleAddToCart}
+              />
+            )}
           </div>
         </div>
 
@@ -185,7 +131,10 @@ export default function PuntoDeVenta() {
             cartItems={cartItems}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            onConfirmPurchase={handleConfirmPurchase}
+            onConfirmPurchase={() => {
+              setCartItems([]);
+              triggerRefresh();
+            }}
           />
         </div>
       </div>
