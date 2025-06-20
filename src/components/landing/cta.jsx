@@ -30,7 +30,9 @@ export function Cta() {
               <Link to="/registrarse">Registrar mi negocio</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/iniciar-sesion">Iniciar sesión</Link>
+              <Link to="/iniciar-sesion" className="text-black hover:text-black">
+                Iniciar sesión
+              </Link>
             </Button>
           </div>
           <p className="text-sm text-primary-foreground/80">Prueba gratuita por 30 días.</p>
