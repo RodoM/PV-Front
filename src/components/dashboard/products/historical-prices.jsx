@@ -27,7 +27,6 @@ function HistoricalPrices({ productoNegocioId }) {
       .then((res) => {
         const { data } = res.data;
         setData(data);
-        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));

@@ -72,8 +72,6 @@ export function BarcodeScanner({ products, onAddToCart }) {
   };
 
   const handleBarcodeScanned = (barcode) => {
-    console.log("Código escaneado:", barcode);
-
     const foundProduct = products.find((product) => product.barcode === barcode);
 
     if (foundProduct) {

@@ -28,8 +28,6 @@ function TopProducts({ sales }) {
   const todasLasVentas = Object.values(sales).flatMap((mes) => mes.ventas || []);
   const topProductos = obtenerTopProductosPorFrecuencia(todasLasVentas);
 
-  console.log(topProductos);
-
   return (
     <Card>
       <CardHeader>

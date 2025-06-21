@@ -31,7 +31,6 @@ function CashBox() {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error al cargar los datos del negocio");
       })
       .finally(() => setGetLoading(false));
   };
@@ -48,49 +47,50 @@ function CashBox() {
 
   const handleState = () => {
     setPostLoading(true);
-    const endpoint = data.estaCerrada ? "/cashbox/open" : "/cashbox/close";
+    const endpoint = !data.estaCerrada ? "/cashbox/open" : "/cashbox/close";
     api
       .post(endpoint, { montoApertura: 0 })
       .then(() => {
-        toast.success(`Se ${data.estaCerrada ? "abrió" : "cerró"} correctamente la caja.`);
+        toast.success(`Se ${!data.estaCerrada ? "abrió" : "cerró"} correctamente la caja.`);
         fetchCashBoxData();
       })
       .catch((error) => {
         console.error(error);
-        toast.error(`Error al ${data.estaCerrada ? "abrir" : "cerrar"} la caja.`);
+        toast.error(`Error al ${!data.estaCerrada ? "abrir" : "cerrar"} la caja.`);
       })
       .finally(() => setPostLoading(false));
   };
 
   return (
-    <div className="bg-white border border-border p-2 mx-2 rounded-md mt-auto">
+    <div className="bg-white dark:bg-black border border-border p-2 mx-2 rounded-md mt-auto">
       {getLoading ? (
         <LoaderCircle className="h-4 w-4 animate-spin mx-auto my-4" />
       ) : (
         <>
           <div className="flex justify-between">
             <span className="text-sm font-medium">Estado de caja:</span>
-            <Badge variant={data.estaCerrada ? "inactive" : "active"}>
-              {data.estaCerrada ? "Cerrada" : "Abierta"}
+            <Badge variant={!data.estaCerrada ? "active" : "inactive"}>
+              {!data.estaCerrada ? "Abierta" : "Cerrada"}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            {data.estaCerrada ? "Ult." : "Total"} ventas: {formatoARS.format(data.totalVentas)}
+            {!data.estaCerrada ? "Total" : "Ult."} ventas:{" "}
+            {formatoARS.format(data.totalVentas || 0)}
           </p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="w-full mt-2" variant="outline">
-                {data.estaCerrada ? "Abrir" : "Cerrar"} caja
+                {!data.estaCerrada ? "Cerrar" : "Abrir"} caja
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{data.estaCerrada ? "Abrir" : "Cerrar"} caja</AlertDialogTitle>
+                <AlertDialogTitle>{!data.estaCerrada ? "Cerrar" : "Abrir"} caja</AlertDialogTitle>
                 <AlertDialogDescription>
-                  ¿Estás seguro de que deseas {data.estaCerrada ? "abrir" : "cerrar"} la caja?
-                  {data.estaCerrada
-                    ? " Se abrirá un nuevo total y se podrán realizar ventas."
-                    : " Se cerrará el total y no se podrán realizar más ventas hasta abrir una nueva caja."}
+                  ¿Estás seguro de que deseas {!data.estaCerrada ? "cerrar" : "abrir"} la caja?
+                  {!data.estaCerrada
+                    ? " Se cerrará el total y no se podrán realizar más ventas hasta abrir una nueva caja."
+                    : " Se abrirá un nuevo total y se podrán realizar ventas."}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
