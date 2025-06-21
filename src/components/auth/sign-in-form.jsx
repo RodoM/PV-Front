@@ -49,8 +49,10 @@ export function SignInForm() {
 
         if (user && !user.negocioId) {
           navigate("/registrarse");
-        } else {
+        } else if (user.role === "Owner" || user.role === "Admin") {
           navigate("/dashboard/resumen");
+        } else {
+          navigate("/puestos");
         }
       })
       .catch((error) => {
