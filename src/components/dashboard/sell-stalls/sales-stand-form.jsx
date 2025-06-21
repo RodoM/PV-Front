@@ -45,8 +45,6 @@ function SalesStandForm({ salesStand, closeModal }) {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-
     if (salesStand) {
       api
         .put(

@@ -30,7 +30,6 @@ function Products() {
         const { data } = res.data;
         setData(data.data);
         setPageCount(data.totalPages);
-        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
