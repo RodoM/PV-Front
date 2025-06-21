@@ -1,4 +1,7 @@
 import { useState } from "react";
+import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
+import { useAuth } from "@/providers/auth-context";
 import { LoaderCircle } from "lucide-react";
 import {
   Form,
@@ -17,20 +20,22 @@ import { z } from "zod";
 import { toast } from "sonner";
 
 const schema = z.object({
-  name: z.string().nonempty("El nombre es obligatorio"),
-  location: z.string().nonempty("La ubicación es obligatoria"),
-  enabled: z.boolean(),
+  nombre: z.string().nonempty("El nombre es obligatorio"),
+  direccionIP: z.string().nonempty("El IP es obligatorio"),
+  direccionMAC: z.string().nonempty("La direccion MAC es obligatorio"),
 });
 
 function SalesStandForm({ salesStand, closeModal }) {
+  const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: salesStand?.name || "",
-      location: salesStand?.location || "",
-      enabled: salesStand?.enabled || false,
+      nombre: salesStand?.nombre || "",
+      direccionIP: salesStand?.direccionIP || "",
+      direccionMAC: salesStand?.direccionMAC || "",
     },
   });
 
@@ -41,20 +46,52 @@ function SalesStandForm({ salesStand, closeModal }) {
 
   const onSubmit = (data) => {
     console.log(data);
-    setLoading(true);
-    setTimeout(() => {
-      toast.success(`Puesto de venta ${salesStand ? "editado" : "agregado"} correctamente`);
-      setLoading(false);
-      closeModal();
-      form.reset();
-    }, 2000);
+
+    if (salesStand) {
+      api
+        .put(
+          "/terminal/modify",
+          { ...data, negocioId: user.negocioId },
+          { params: { puestoId: salesStand.id } }
+        )
+        .then(() => {
+          toast.success("Puesto agregado correctamente");
+          triggerRefresh();
+          closeModal();
+          form.reset();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al agregar el Puesto");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      api
+        .post("/terminal/register", { ...data, negocioId: user.negocioId })
+        .then(() => {
+          toast.success("Puesto agregado correctamente");
+          triggerRefresh();
+          closeModal();
+          form.reset();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al agregar el Puesto");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* Nombre */}
         <FormField
-          name="name"
+          name="nombre"
           control={form.control}
           render={({ field }) => (
             <FormItem>
@@ -67,33 +104,30 @@ function SalesStandForm({ salesStand, closeModal }) {
           )}
         />
 
+        {/* Dirección IP */}
         <FormField
-          name="location"
+          name="direccionIP"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ubicación</FormLabel>
+              <FormLabel>Dirección IP</FormLabel>
               <FormControl>
-                <Input placeholder="Ubicación del puesto" {...field} />
+                <Input placeholder="Ej: 192.168.0.1" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Dirección MAC */}
         <FormField
-          name="enabled"
+          name="direccionMAC"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>¿Está habilitado?</FormLabel>
+              <FormLabel>Dirección MAC</FormLabel>
               <FormControl>
-                <input
-                  type="checkbox"
-                  checked={field.value}
-                  onChange={field.onChange}
-                  className="h-4 w-4"
-                />
+                <Input placeholder="Ej: 00:1B:44:11:3A:B7" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,7 +135,7 @@ function SalesStandForm({ salesStand, closeModal }) {
         />
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
             Cancelar
           </Button>
           <Button type="submit" disabled={loading}>

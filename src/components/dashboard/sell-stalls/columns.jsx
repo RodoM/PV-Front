@@ -1,15 +1,25 @@
+import ActionCell from "../sell-stalls/sales-stall-action-cell";
+
 export const columns = [
   {
+    header: "ID",
+    accessorKey: "id",
+  },
+  {
     header: "Nombre",
-    accessorKey: "name",
+    accessorKey: "nombre",
   },
   {
-    header: "Ubicación",
-    accessorKey: "location",
+    header: "Direccion IP",
+    accessorKey: "direccionIP",
   },
   {
-    header: "Estado",
-    accessorKey: "enabled",
-    cell: ({ row }) => (row.original.enabled ? "active" : "inactive"),
+    header: "Direcion MAC",
+    accessorKey: "direccionMAC",
+  },
+  {
+    accessorKey: "actions",
+    header: "",
+    cell: ({ row }) => <ActionCell row={row} />,
   },
 ];
