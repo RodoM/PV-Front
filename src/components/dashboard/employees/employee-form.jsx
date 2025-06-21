@@ -4,7 +4,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
 import {
   Form,
   FormControl,
@@ -17,24 +16,17 @@ import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const schema = z
-  .object({
-    nombre: z.string().nonempty("El nombre es obligatorio"),
-    apellido: z.string().nonempty("El apellido es obligatorio"),
-    email: z.string().email("El email es inválido"),
-    password: z
-      .string()
-      .nonempty("Contraseña es obligatoria")
-      .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
-      .refine((val) => /\d/.test(val), {
-        message: "La contraseña debe incluir al menos un número",
-      }),
-    confirmPassword: z.string().nonempty("Confirmar contraseña es obligatorio"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
-  });
+// ✅ Schema completo
+const schema = z.object({
+  email: z.string().email("El email es inválido"),
+  password: z.string().nonempty("Contraseña es obligatoria"),
+  nombre: z.string().nonempty("El nombre es obligatorio"),
+  apellido: z.string().nonempty("El apellido es obligatorio"),
+  tipoUsuario: z.string().nonempty("Tipo de usuario es obligatorio"),
+  tipoDocumento: z.string().nonempty("Tipo de documento es obligatorio"),
+  numeroDocumento: z.string().nonempty("Número de documento es obligatorio"),
+  avatarUrl: z.string().url("Debe ser una URL válida").or(z.literal("")),
+});
 
 function EmployeeForm({ employee, closeModal }) {
   const [loading, setLoading] = useState(false);
@@ -42,11 +34,14 @@ function EmployeeForm({ employee, closeModal }) {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      nombre: "",
-      apellido: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      email: employee?.email || "",
+      password: employee?.password || "",
+      nombre: employee?.nombre || "",
+      apellido: employee?.apellido || "",
+      tipoUsuario: employee?.tipoUsuario || "",
+      tipoDocumento: employee?.tipoDocumento || "",
+      numeroDocumento: employee?.numeroDocumento || "",
+      avatarUrl: employee?.avatarUrl || "",
     },
   });
 
@@ -64,75 +59,42 @@ function EmployeeForm({ employee, closeModal }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          name="nombre"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre</FormLabel>
-              <FormControl>
-                <Input placeholder="Nombre del empleado" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {[
+          { name: "email", label: "Email", type: "text", placeholder: "Email del empleado" },
+          { name: "password", label: "Contraseña", type: "password" },
+          { name: "nombre", label: "Nombre", type: "text", placeholder: "Nombre del empleado" },
+          {
+            name: "apellido",
+            label: "Apellido",
+            type: "text",
+            placeholder: "Apellido del empleado",
+          },
+          { name: "tipoUsuario", label: "Tipo Usuario", type: "text", placeholder: "1, 2, 3" },
+          {
+            name: "tipoDocumento",
+            label: "Tipo Documento",
+            type: "text",
+            placeholder: "1, 2, 3, 4",
+          },
+          { name: "numeroDocumento", label: "Numero Documento", type: "text" },
+          { name: "avatarUrl", label: "Avatar URL", type: "text", placeholder: "https://..." },
+        ].map(({ name, label, type, placeholder }) => (
+          <FormField
+            key={name}
+            name={name}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{label}</FormLabel>
+                <FormControl>
+                  <Input type={type} placeholder={placeholder} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
 
-        <FormField
-          name="apellido"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Apellido</FormLabel>
-              <FormControl>
-                <Input placeholder="Apellido del empleado" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="email"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Email del empleado" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="password"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contraseña</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="confirmPassword"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirmar contraseña</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <DialogFooter>
           <Button type="button" variant="outline" onClick={closeModal}>
             Cancelar
