@@ -1,32 +1,16 @@
 import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Pencil } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import SalesStandForm from "./sales-stand-form"; // Asumimos que este es el formulario reutilizable
+import SalesStandForm from "./sales-stand-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import api from "@/lib/axios";
-import { useRefresh } from "@/providers/refresh-context";
-import { toast } from "sonner"; // Si estás usando Sonner para notificaciones
 
 function ActionCell({ row }) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { triggerRefresh } = useRefresh();
-
-  const handleDisable = async () => {
-    const id = row.original.id;
-    try {
-      await api.patch(`/businesssell/${id}/disable`); // Asegurate que el endpoint sea correcto
-      toast.success("Puesto deshabilitado correctamente");
-      triggerRefresh();
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al deshabilitar el puesto");
-    }
-  };
 
   return (
     <>
@@ -41,20 +25,12 @@ function ActionCell({ row }) {
               setOpenEditDialog(true);
             }}
           >
+            <Pencil className="h-4 w-4" />
             Editar
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault();
-              handleDisable();
-            }}
-          >
-            Deshabilitar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Modal de edición */}
       <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
         <DialogContent>
           <DialogHeader>
