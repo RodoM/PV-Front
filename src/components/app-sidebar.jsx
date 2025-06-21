@@ -12,6 +12,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useBusiness } from "@/providers/business-context";
+import CashBox from "./dashboard/sidebar/cash-box";
 
 const data = {
   routes: [
@@ -74,6 +75,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.routes} />
+        <CashBox />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

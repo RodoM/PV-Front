@@ -1,20 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { tipoUnidadMedidas, factoresConversion } from "@/enums/index";
 
 export function CartItemComponent({ item, importe, onUpdateQuantity, onRemoveItem }) {
-  const obtenerUnidad = (unidad) => {
-    return Object.keys(tipoUnidadMedidas).find((key) => tipoUnidadMedidas[key] === unidad);
-  };
-
-  const calcularStockDisponible = () => {
-    const factor =
-      factoresConversion[obtenerUnidad(item.tipoUnidadMedida)]?.[
-        obtenerUnidad(item.unidadSeleccionada)
-      ] ?? 1;
-    return Math.floor(item.stockActual * factor);
-  };
-
   const handleDecrease = () => {
     if (item.quantity > 1) {
       onUpdateQuantity(item.productoNegocioId, item.quantity - 1);
@@ -22,9 +9,7 @@ export function CartItemComponent({ item, importe, onUpdateQuantity, onRemoveIte
   };
 
   const handleIncrease = () => {
-    if (item.quantity <= calcularStockDisponible()) {
-      onUpdateQuantity(item.productoNegocioId, item.quantity + 1);
-    }
+    onUpdateQuantity(item.productoNegocioId, item.quantity + 1);
   };
 
   return (
@@ -56,13 +41,7 @@ export function CartItemComponent({ item, importe, onUpdateQuantity, onRemoveIte
 
         <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleIncrease}
-          disabled={item.quantity >= calcularStockDisponible()}
-          className="w-8 h-8 p-0"
-        >
+        <Button variant="outline" size="sm" onClick={handleIncrease} className="w-8 h-8 p-0">
           <Plus className="w-3 h-3" />
         </Button>
 

@@ -120,14 +120,14 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
     api
       .get("/sector/list")
       .then((res) => setRubroOptions(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
     api
       .get("/plan/list")
       .then((res) => setPlanOptions(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }, []);
 
   return (

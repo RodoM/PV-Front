@@ -31,7 +31,7 @@ export function Header() {
   const handleLogOut = () => {
     removeToken();
     setBusiness(null);
-    navigate("/login");
+    navigate("/iniciar-sesion");
   };
 
   return (

@@ -1,16 +1,52 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import api from "@/lib/axios";
 
 const BusinessContext = createContext();
 
 export const BusinessProvider = ({ children }) => {
   const [business, setBusiness] = useState(null);
+  const [cashbox, setCashbox] = useState(null);
+  const [loadingCashbox, setLoadingCashbox] = useState(false);
+
+  const fetchCashBoxData = () => {
+    setLoadingCashbox(true);
+    api
+      .get("/cashbox/data")
+      .then((response) => {
+        const { data } = response.data;
+        setCashbox(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoadingCashbox(false));
+  };
+
+  const fetchBusinessData = () => {
+    api
+      .get("/business/data")
+      .then((response) => {
+        const { data } = response.data;
+        setBusiness(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchBusinessData();
+    fetchCashBoxData();
+  }, [setBusiness]);
 
   const clearBusiness = () => {
     setBusiness(null);
   };
 
   return (
-    <BusinessContext.Provider value={{ business, setBusiness, clearBusiness }}>
+    <BusinessContext.Provider
+      value={{ business, setBusiness, clearBusiness, cashbox, loadingCashbox, fetchCashBoxData }}
+    >
       {children}
     </BusinessContext.Provider>
   );

@@ -1,29 +1,11 @@
-import { useEffect } from "react";
-import api from "@/lib/axios";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
-import { toast } from "sonner";
-import { useBusiness } from "@/providers/business-context";
 
 function DashboardLayout() {
   const location = useLocation();
   const currentLocation = location.pathname.split("/").filter(Boolean).pop() || "";
-  const { setBusiness } = useBusiness();
-
-  useEffect(() => {
-    api
-      .get("/business/data")
-      .then((response) => {
-        const { data } = response.data;
-        setBusiness(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error al cargar los datos del negocio");
-      });
-  }, [setBusiness]);
 
   return (
     <SidebarProvider>
