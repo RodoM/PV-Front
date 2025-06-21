@@ -90,9 +90,11 @@ function DataTable({
             className="max-w-sm"
           />
         )}
-        <Button className="ml-auto" onClick={addDialog}>
-          Agregar {filterLabel}
-        </Button>
+        {filterLabel && (
+          <Button className="ml-auto" onClick={addDialog}>
+            Agregar {filterLabel}
+          </Button>
+        )}
       </div>
 
       <div className="rounded-md border">

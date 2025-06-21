@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, ReceiptText } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,7 @@ function ActionCell({ row }) {
               setViewDetail(true);
             }}
           >
+            <ReceiptText className="h-4 w-4" />
             Ver detalle
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -1,6 +1,8 @@
 import { ArrowUpDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import ActionCell from "./sales-action-cell";
+
+// sacar la busqueda
+// boton de agregar venta
 
 export const columns = [
   {
@@ -8,52 +10,67 @@ export const columns = [
     header: "ID",
   },
   {
-    accessorKey: "name",
-    header: "Nombre",
-  },
-  {
-    accessorKey: "cantidad",
+    accessorKey: "fechaAlta",
     header: ({ column }) => {
       return (
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Cantidad
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Precio
+          Fecha
           <ArrowUpDown className="h-4 w-4" />
         </div>
       );
     },
     cell: ({ row }) => {
+      if (!row.original || !row.original.fechaAlta) return "Sin fecha";
+      const fecha = new Date(row.original.fechaAlta);
+      return fecha.toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    },
+  },
+  {
+    accessorKey: "detalles",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Cantidad de productos
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      if (!row.original || !row.original.detalles) return 0;
+      return row.original.detalles.length;
+    },
+  },
+  {
+    accessorKey: "total",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Total
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      if (!row.original) return "$0.00";
       const formatoARS = new Intl.NumberFormat("es-AR", {
         style: "currency",
         currency: "ARS",
         minimumFractionDigits: 2,
       });
-
-      return formatoARS.format(row.original.price);
-    },
-  },
-  {
-    accessorKey: "enabled",
-    header: "Estado",
-    cell: ({ row }) => {
-      const state = row.original.enabled ? "active" : "inactive";
-      return <Badge variant={state}>{row.original.enabled ? "Activo" : "Inactivo"}</Badge>;
+      return formatoARS.format(row.original.total || 0);
     },
   },
   {
