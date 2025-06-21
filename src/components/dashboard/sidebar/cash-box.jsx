@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "@/lib/axios";
+import { useBusiness } from "@/providers/business-context";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
@@ -17,27 +18,8 @@ import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 
 function CashBox() {
-  const [getLoading, setGetLoading] = useState(false);
-  const [postLoading, setPostLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const fetchCashBoxData = () => {
-    setGetLoading(true);
-    api
-      .get("/cashbox/data")
-      .then((response) => {
-        const { data } = response.data;
-        setData(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => setGetLoading(false));
-  };
-
-  useEffect(() => {
-    fetchCashBoxData();
-  }, []);
+  const { fetchCashBoxData, cashbox, loadingCashbox } = useBusiness();
+  const [loading, setLoading] = useState(false);
 
   const formatoARS = new Intl.NumberFormat("es-AR", {
     style: "currency",
@@ -46,49 +28,51 @@ function CashBox() {
   });
 
   const handleState = () => {
-    setPostLoading(true);
-    const endpoint = !data.estaCerrada ? "/cashbox/open" : "/cashbox/close";
+    setLoading(true);
+    const endpoint = !cashbox.estaCerrada ? "/cashbox/close" : "/cashbox/open";
     api
       .post(endpoint, { montoApertura: 0 })
       .then(() => {
-        toast.success(`Se ${!data.estaCerrada ? "abrió" : "cerró"} correctamente la caja.`);
+        toast.success(`Se ${!cashbox.estaCerrada ? "cerró" : "abrió"} correctamente la caja.`);
         fetchCashBoxData();
       })
       .catch((error) => {
         console.error(error);
-        toast.error(`Error al ${!data.estaCerrada ? "abrir" : "cerrar"} la caja.`);
+        toast.error(`Error al ${!cashbox.estaCerrada ? "cerrar" : "abrir"} la caja.`);
       })
-      .finally(() => setPostLoading(false));
+      .finally(() => setLoading(false));
   };
 
   return (
     <div className="bg-white dark:bg-black border border-border p-2 mx-2 rounded-md mt-auto">
-      {getLoading ? (
+      {loadingCashbox || !cashbox ? (
         <LoaderCircle className="h-4 w-4 animate-spin mx-auto my-4" />
       ) : (
         <>
           <div className="flex justify-between">
             <span className="text-sm font-medium">Estado de caja:</span>
-            <Badge variant={!data.estaCerrada ? "active" : "inactive"}>
-              {!data.estaCerrada ? "Abierta" : "Cerrada"}
+            <Badge variant={!cashbox.estaCerrada ? "active" : "inactive"}>
+              {!cashbox.estaCerrada ? "Abierta" : "Cerrada"}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            {!data.estaCerrada ? "Total" : "Ult."} ventas:{" "}
-            {formatoARS.format(data.totalVentas || 0)}
+            {!cashbox.estaCerrada ? "Total" : "Ult."} ventas:{" "}
+            {formatoARS.format(cashbox.totalVentas || 0)}
           </p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="w-full mt-2" variant="outline">
-                {!data.estaCerrada ? "Cerrar" : "Abrir"} caja
+                {!cashbox.estaCerrada ? "Cerrar" : "Abrir"} caja
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{!data.estaCerrada ? "Cerrar" : "Abrir"} caja</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {!cashbox.estaCerrada ? "Cerrar" : "Abrir"} caja
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  ¿Estás seguro de que deseas {!data.estaCerrada ? "cerrar" : "abrir"} la caja?
-                  {!data.estaCerrada
+                  ¿Estás seguro de que deseas {!cashbox.estaCerrada ? "cerrar" : "abrir"} la caja?
+                  {!cashbox.estaCerrada
                     ? " Se cerrará el total y no se podrán realizar más ventas hasta abrir una nueva caja."
                     : " Se abrirá un nuevo total y se podrán realizar ventas."}
                 </AlertDialogDescription>
@@ -96,7 +80,7 @@ function CashBox() {
               <AlertDialogFooter>
                 <AlertDialogCancel>Volver</AlertDialogCancel>
                 <AlertDialogAction onClick={handleState}>
-                  {postLoading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
+                  {loading && <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />}
                   Confirmar
                 </AlertDialogAction>
               </AlertDialogFooter>

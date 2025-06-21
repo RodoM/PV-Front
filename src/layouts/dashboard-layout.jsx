@@ -1,35 +1,11 @@
-import { useEffect } from "react";
-import api from "@/lib/axios";
-import { useAuth } from "@/providers/auth-context";
-import { useBusiness } from "@/providers/business-context";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Outlet, useLocation, Navigate } from "react-router-dom";
-import { toast } from "sonner";
+import { Outlet, useLocation } from "react-router-dom";
 
 function DashboardLayout() {
-  const { user } = useAuth();
-  const { setBusiness } = useBusiness();
   const location = useLocation();
   const currentLocation = location.pathname.split("/").filter(Boolean).pop() || "";
-
-  useEffect(() => {
-    api
-      .get("/business/data")
-      .then((response) => {
-        const { data } = response.data;
-        setBusiness(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error al cargar los datos del negocio");
-      });
-  }, [setBusiness]);
-
-  if (user.role !== "Owner" && user.role !== "Admin") {
-    return <Navigate to="/puestos" />;
-  }
 
   return (
     <SidebarProvider>

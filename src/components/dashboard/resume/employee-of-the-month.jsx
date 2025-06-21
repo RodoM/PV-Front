@@ -1,21 +1,30 @@
-import React from "react";
 import { User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-function EmployeeOfTheMonth({ sales }) {
+export default function TopEmployeeOfMonth({ sales }) {
   const currentMonth = new Date().toLocaleString("es-AR", { month: "long" }).toLowerCase();
 
   const ventasMesActual = sales[currentMonth]?.ventas ?? [];
 
-  const ventasPorEmpleado = ventasMesActual.reduce((acc, venta) => {
-    const id = venta.empleadoId ?? "Desconocido";
-    acc[id] = (acc[id] ?? 0) + venta.total;
-    return acc;
-  }, {});
+  const ventasPorEmpleado = {};
 
-  const [mejorEmpleadoId, montoMayor] = Object.entries(ventasPorEmpleado).reduce(
-    (max, actual) => (actual[1] > max[1] ? actual : max),
-    [null, 0]
+  for (const venta of ventasMesActual) {
+    const empleado = venta.empleado;
+    if (!empleado) continue;
+
+    const id = empleado.id;
+    if (!ventasPorEmpleado[id]) {
+      ventasPorEmpleado[id] = {
+        nombreCompleto: `${empleado.nombre} ${empleado.apellido}`,
+        total: 0,
+      };
+    }
+    ventasPorEmpleado[id].total += venta.total;
+  }
+
+  const topEmpleado = Object.values(ventasPorEmpleado).reduce(
+    (max, actual) => (actual.total > max.total ? actual : max),
+    { nombreCompleto: "Sin datos", total: 0 }
   );
 
   const formatoARS = new Intl.NumberFormat("es-AR", {
@@ -31,13 +40,11 @@ function EmployeeOfTheMonth({ sales }) {
         <User className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
-          {mejorEmpleadoId !== "Desconocido" ? `ID ${mejorEmpleadoId}` : "Desconocido"}
-        </div>
-        <p className="text-xs text-muted-foreground">{formatoARS.format(montoMayor)} en ventas</p>
+        <div className="text-2xl font-bold">{topEmpleado.nombreCompleto}</div>
+        <p className="text-xs text-muted-foreground">
+          {formatoARS.format(topEmpleado.total)} en ventas
+        </p>
       </CardContent>
     </Card>
   );
 }
-
-export default EmployeeOfTheMonth;

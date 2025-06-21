@@ -74,12 +74,8 @@ export default function PuntoDeVenta() {
     <div className="flex flex-1 flex-col min-h-screen p-4">
       <header className="flex items-center mb-6">
         <h1 className="text-3xl font-bold mb-2">Puesto "{searchParams.get("name")}"</h1>
-        <Button
-          variant="destructive"
-          className="ml-auto mr-4"
-          onClick={() => navigate("/puestos/")}
-        >
-          Cerrar puesto
+        <Button variant="outline" className="ml-auto mr-4" onClick={() => navigate("/puestos/")}>
+          Salir del puesto
         </Button>
         <Button variant="outline" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
           {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

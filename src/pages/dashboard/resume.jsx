@@ -57,7 +57,7 @@ export default function Dashboard() {
         <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <MonthSales sales={salesData} />
             <TotalProducts />
             <EmployeeOfTheMonth sales={salesData} />
