@@ -1,4 +1,6 @@
 import { useState } from "react";
+import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
 import { LoaderCircle } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -16,20 +18,25 @@ import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// ✅ Schema completo
 const schema = z.object({
   email: z.string().email("El email es inválido"),
   password: z.string().nonempty("Contraseña es obligatoria"),
   nombre: z.string().nonempty("El nombre es obligatorio"),
   apellido: z.string().nonempty("El apellido es obligatorio"),
-  tipoUsuario: z.string().nonempty("Tipo de usuario es obligatorio"),
-  tipoDocumento: z.string().nonempty("Tipo de documento es obligatorio"),
+  tipoUsuario: z.coerce.number().int({ message: "Debe ser un número entero" }),
+  tipoDocumento: z.coerce.number().int({ message: "Debe ser un número entero" }),
   numeroDocumento: z.string().nonempty("Número de documento es obligatorio"),
-  avatarUrl: z.string().url("Debe ser una URL válida").or(z.literal("")),
+  avatarUrl: z
+    .string()
+    .trim()
+    .refine((val) => val === "" || z.string().url().safeParse(val).success, {
+      message: "Debe ser una URL válida o dejar vacío",
+    }),
 });
 
 function EmployeeForm({ employee, closeModal }) {
   const [loading, setLoading] = useState(false);
+  const { triggerRefresh } = useRefresh();
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -46,14 +53,40 @@ function EmployeeForm({ employee, closeModal }) {
   });
 
   const onSubmit = (data) => {
-    console.log("Empleado:", data);
-    setLoading(true);
-    setTimeout(() => {
-      toast.success(`Empleado ${employee ? "actualizado" : "agregado"} correctamente`);
-      setLoading(false);
-      form.reset();
-      closeModal();
-    }, 2000);
+    console.log(data);
+    if (employee) {
+      api
+        .put("/user/modify", { ...data })
+        .then(() => {
+          toast.success("Empleado agregado correctamente");
+          triggerRefresh();
+          closeModal();
+          form.reset();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al modificar el Empleado");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      api
+        .post("/user/register", { ...data })
+        .then(() => {
+          toast.success("Empleado agregado correctamente");
+          triggerRefresh();
+          closeModal();
+          form.reset();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al agregar el Empleado");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
 
   return (
