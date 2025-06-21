@@ -5,8 +5,10 @@ import EmployeeOfTheMonth from "@/components/dashboard/resume/employee-of-the-mo
 import TotalProducts from "@/components/dashboard/resume/total-products";
 import MonthlySalesChart from "@/components/dashboard/resume/monthly-sales-chart";
 import TopProducts from "@/components/dashboard/resume/top-products";
+import { LoaderCircle } from "lucide-react";
 
 export default function Dashboard() {
+  const [loading, setLoading] = useState(true);
   const [salesData, setSalesData] = useState([]);
 
   const salesPerMonth = (sales) => {
@@ -34,6 +36,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    setLoading(true);
     api
       .get("/sale/list", { params: { pageNumber: 1, pageSize: 10000 } })
       .then((response) => {
@@ -42,18 +45,27 @@ export default function Dashboard() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
-    <main className="flex flex-1 flex-col gap-4 sm:gap-8 md:gap-6">
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-        <MonthSales sales={salesData} />
-        <TotalProducts />
-        <EmployeeOfTheMonth sales={salesData} />
-      </div>
-      <MonthlySalesChart sales={salesData} />
-      <TopProducts sales={salesData} />
+    <main className="flex flex-1 flex-col justify-center gap-4 sm:gap-8 md:gap-6">
+      {loading ? (
+        <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <MonthSales sales={salesData} />
+            <TotalProducts />
+            <EmployeeOfTheMonth sales={salesData} />
+          </div>
+          <MonthlySalesChart sales={salesData} />
+          <TopProducts sales={salesData} />
+        </>
+      )}
     </main>
   );
 }
