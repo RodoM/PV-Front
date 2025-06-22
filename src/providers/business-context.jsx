@@ -41,7 +41,7 @@ export const BusinessProvider = ({ children }) => {
       fetchBusinessData();
       fetchCashBoxData();
     }
-  }, [setBusiness]);
+  }, [setBusiness, user]);
 
   const clearBusiness = () => {
     setBusiness(null);
