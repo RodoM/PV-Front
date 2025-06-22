@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
 import DataTable from "@/components/ui/data-table";
-import { columns } from "@/components/dashboard/employees/employees-columns";
+import { columns } from "@/components/dashboard/employees/columns";
 import {
   Dialog,
   DialogContent,
@@ -10,54 +12,39 @@ import {
 } from "@/components/ui/dialog";
 import EmployeeForm from "@/components/dashboard/employees/employee-form";
 
-const data = [
-  {
-    id: 1,
-    first_name: "Juan",
-    last_name: "Perez",
-    email: "juan@gmail.com",
-    position: "Caja 1",
-    hire_date: "2022-01-01",
-    enabled: true,
-  },
-  {
-    id: 2,
-    first_name: "Pedro",
-    last_name: "Gonzalez",
-    email: "pedro@gmail.com",
-    position: "Caja 2",
-    hire_date: "2022-01-02",
-    enabled: true,
-  },
-  {
-    id: 3,
-    first_name: "Carlos",
-    last_name: "Ramirez",
-    email: "carlos@gmail.com",
-    position: "Caja 3",
-    hire_date: "2022-01-03",
-    enabled: false,
-  },
-  {
-    id: 4,
-    first_name: "Luis",
-    last_name: "Solis",
-    email: "luis@gmail.com",
-    position: "Caja 4",
-    hire_date: "2022-01-04",
-    enabled: true,
-  },
-];
-
 function Employees() {
   const [addDialog, setAddDialog] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const { refreshKey } = useRefresh();
+
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/user/list", { params: { pageNumber, pageSize, onlyActive: false } })
+      .then((res) => {
+        const { data } = res.data;
+        setData(data.data);
+        setPageCount(data.totalPages);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [pageNumber, pageSize, refreshKey]);
 
   return (
     <>
       <DataTable
         columns={columns}
+        loading={loading}
         data={data}
-        filterKey="name"
+        pageSize={pageSize}
+        pageNumber={pageNumber}
+        pageCount={pageCount}
+        onPageChange={(pageNumber) => setPageNumber(pageNumber)}
+        onPageSizeChange={(pageSize) => setPageSize(pageSize)}
         filterLabel="empleado"
         addDialog={() => setAddDialog(true)}
       />
