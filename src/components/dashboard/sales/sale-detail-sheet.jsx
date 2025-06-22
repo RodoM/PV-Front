@@ -1,3 +1,4 @@
+import { useBusiness } from "@/providers/business-context";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -29,17 +30,18 @@ const formatCurrency = (amount) => {
 
 const getPaymentMethod = (code) => {
   const methods = {
-    1: "Efectivo",
-    2: "Transferencia",
-    3: "Débito",
-    4: "Crédito",
-    5: "QR",
-    6: "MODO",
+    0: "Efectivo",
+    1: "Transferencia",
+    2: "Débito",
+    3: "Crédito",
+    4: "QR",
+    5: "MODO",
   };
   return methods[code] || "Otro";
 };
 
 function SaleDetailSheet({ open, onOpenChange, sale }) {
+  const { business } = useBusiness();
   const handlePrint = () => {
     window.print();
   };
@@ -83,16 +85,26 @@ function SaleDetailSheet({ open, onOpenChange, sale }) {
           <Separator />
 
           <div className="space-y-1">
+            <h3 className="font-semibold">NEGOCIO</h3>
+            <div className="flex justify-between">
+              <span>Nombre:</span>
+              <span>{business?.nombre}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>{business?.tipoDocumento}:</span>
+              <span>{business?.numeroDocumento}</span>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-1">
             <h3 className="font-semibold">VENDEDOR</h3>
             <div className="flex justify-between">
               <span>Nombre:</span>
               <span>
                 {sale.empleado.nombre} {sale.empleado.apellido}
               </span>
-            </div>
-            <div className="flex justify-between">
-              <span>DNI:</span>
-              <span>{sale.empleado.numeroDocumento}</span>
             </div>
           </div>
 

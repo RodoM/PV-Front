@@ -6,6 +6,7 @@ import Landing from "./pages/landing";
 import Resume from "./pages/dashboard/resume";
 import SignIn from "./pages/auth/sign-in";
 import SignUp from "./pages/auth/sign-up";
+import ResetPassword from "./pages/auth/reset-password";
 import Products from "./pages/dashboard/products";
 import Sales from "./pages/dashboard/sales";
 import SalesStalls from "./pages/dashboard/sales-stalls";
@@ -105,6 +106,15 @@ const App = () => {
       element: (
         <PublicLayout>
           <SignUp />
+        </PublicLayout>
+      ),
+    },
+    {
+      path: "/restablecer-contrasena",
+      name: "Restablecer Contraseña",
+      element: (
+        <PublicLayout>
+          <ResetPassword />
         </PublicLayout>
       ),
     },
