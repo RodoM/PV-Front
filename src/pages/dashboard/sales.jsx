@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import { Link } from "react-router-dom";
 import DataTable from "@/components/ui/data-table";
 import { columns } from "@/components/dashboard/sales/sales-columns";
+import { Button } from "@/components/ui/button";
 
 function Sales() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -24,7 +26,10 @@ function Sales() {
   }, [pageNumber, pageSize]);
 
   return (
-    <>
+    <div className="flex flex-col items-end">
+      <Button>
+        <Link to="/puestos">Realizar venta</Link>
+      </Button>
       <DataTable
         columns={columns}
         loading={loading}
@@ -35,7 +40,7 @@ function Sales() {
         onPageChange={(pageNumber) => setPageNumber(pageNumber)}
         onPageSizeChange={(pageSize) => setPageSize(pageSize)}
       />
-    </>
+    </div>
   );
 }
 

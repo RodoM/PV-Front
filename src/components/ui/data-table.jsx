@@ -80,7 +80,7 @@ function DataTable({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
       <div className="flex items-center justify-between gap-4">
         {filterKey && (
           <Input

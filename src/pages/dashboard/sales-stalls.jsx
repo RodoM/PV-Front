@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import SalesStandForm from "@/components/dashboard/sell-stalls/sales-stand-form";
+import SalesStallForm from "@/components/dashboard/sell-stalls/sales-stall-form";
 import { useRefresh } from "@/providers/refresh-context";
 
 function SalesStalls() {
@@ -60,7 +60,7 @@ function SalesStalls() {
               Complete el formulario para agregar un puesto de venta.
             </DialogDescription>
           </DialogHeader>
-          <SalesStandForm closeModal={() => setAddDialog(false)} onStandAdded={triggerRefresh} />
+          <SalesStallForm closeModal={() => setAddDialog(false)} onStandAdded={triggerRefresh} />
         </DialogContent>
       </Dialog>
     </>

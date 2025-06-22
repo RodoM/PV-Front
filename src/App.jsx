@@ -10,6 +10,7 @@ import Products from "./pages/dashboard/products";
 import Sales from "./pages/dashboard/sales";
 import SalesStalls from "./pages/dashboard/sales-stalls";
 import Settings from "./pages/dashboard/settings";
+import Profile from "./pages/dashboard/profile";
 import SalesStall from "./pages/employee-dashboard/sales-stall";
 import NotFound from "./pages/not-found";
 import EmployeeDashboard from "./pages/employee-dashboard/sales-stalls";
@@ -58,6 +59,11 @@ const App = () => {
           path: "configuraciones",
           name: "Configuraciones",
           element: <Settings />,
+        },
+        {
+          path: "perfil",
+          name: "Perfil",
+          element: <Profile />,
         },
         {
           path: "*",

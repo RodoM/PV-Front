@@ -33,6 +33,18 @@ export const columns = [
     },
   },
   {
+    accesorKey: "empleado.nombre",
+    header: "Empleado",
+    cell: ({ row }) => {
+      if (!row.original) return "Sin empleado";
+      return (
+        <div>
+          {row.original.empleado.nombre} {row.original.empleado.apellido}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "detalles",
     header: ({ column }) => {
       return (
@@ -58,7 +70,7 @@ export const columns = [
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Total
+          Importe
           <ArrowUpDown className="h-4 w-4" />
         </div>
       );

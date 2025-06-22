@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import { useTheme } from "@/providers/theme-provider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth-context";
 import { useBusiness } from "@/providers/business-context";
 import { Shell, Menu, Sun, Moon, X } from "lucide-react";
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export function Header() {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-  const { removeToken } = useAuth();
+  const { removeToken, user } = useAuth();
   const { business, setBusiness } = useBusiness();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -45,6 +45,11 @@ export function Header() {
         </div>
 
         <nav className="hidden md:flex gap-4 ml-auto">
+          {user.role !== "Seller" && (
+            <Button>
+              <Link to="/dashboard/ventas">Volver al dashboard</Link>
+            </Button>
+          )}
           <Button variant="outline" onClick={handleLogOut}>
             Cerrar sesión
           </Button>
@@ -61,6 +66,11 @@ export function Header() {
       {isMenuOpen && (
         <div className="container md:hidden p-4">
           <nav className="flex flex-col gap-4">
+            {user.role !== "Seller" && (
+              <Button>
+                <Link to="/dashboard/ventas">Volver al dashboard</Link>
+              </Button>
+            )}
             <Button variant="outline" onClick={handleLogOut}>
               Cerrar sesión
             </Button>

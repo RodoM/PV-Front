@@ -1,4 +1,4 @@
-import { Moon, ChevronsUpDown, LogOut } from "lucide-react";
+import { Moon, ChevronsUpDown, LogOut, User } from "lucide-react";
 import { useAuth } from "@/providers/auth-context";
 import { useBusiness } from "@/providers/business-context";
 import { useNavigate } from "react-router-dom";
@@ -82,6 +82,10 @@ export function NavUser() {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 checked={theme === "dark"}
               />
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/dashboard/perfil")}>
+              <User />
+              Mi perfil
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogOut}>

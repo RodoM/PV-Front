@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "./auth-context";
 import api from "@/lib/axios";
 
 const BusinessContext = createContext();
 
 export const BusinessProvider = ({ children }) => {
+  const { user } = useAuth();
   const [business, setBusiness] = useState(null);
   const [cashbox, setCashbox] = useState(null);
   const [loadingCashbox, setLoadingCashbox] = useState(false);
@@ -35,8 +37,10 @@ export const BusinessProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchBusinessData();
-    fetchCashBoxData();
+    if (user) {
+      fetchBusinessData();
+      fetchCashBoxData();
+    }
   }, [setBusiness]);
 
   const clearBusiness = () => {

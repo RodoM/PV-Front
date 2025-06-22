@@ -85,9 +85,9 @@ function EmployeeForm({ employee, closeModal }) {
     setLoading(true);
     if (employee) {
       api
-        .put("/user/modify", { ...data })
+        .put("/user/modify", { ...data }, { params: { usuarioId: employee.id } })
         .then(() => {
-          toast.success("Empleado agregado correctamente");
+          toast.success("Empleado modificado correctamente");
           triggerRefresh();
           closeModal();
           form.reset();

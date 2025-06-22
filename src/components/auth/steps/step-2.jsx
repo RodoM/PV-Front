@@ -31,23 +31,19 @@ const schema = z
     rubroId: z.number({
       required_error: "Rubro es obligatorio",
     }),
-    pais: z.string().nonempty("Pais es obligatorio"),
-    provincia: z.string().nonempty("Provincia es obligatorio"),
-    ciudad: z.string().nonempty("Ciudad es obligatorio"),
-    codigoPostal: z.string().nonempty("Código postal es obligatorio"),
-    calle: z.string().nonempty("Calle es obligatorio"),
-    altura: z.string().nonempty("Altura es obligatorio"),
+    pais: z.string(),
+    provincia: z.string(),
+    ciudad: z.string(),
+    codigoPostal: z.string(),
+    calle: z.string(),
+    altura: z.string(),
     usaFacturacion: z.boolean().default(false),
     tipoFacturacion: z.number().nullable(),
-    moneda: z.number({
-      required_error: "Moneda es obligatorio",
-    }),
-    tipoDocumento: z.number({
-      required_error: "Tipo de documento es obligatorio",
-    }),
-    numeroDocumento: z.string().nonempty("Número de documento es obligatorio"),
+    moneda: z.number(),
+    tipoDocumento: z.number(),
+    numeroDocumento: z.string(),
     email: z.string().email("Email no válido"),
-    telefono: z.string().nonempty("Telefono es obligatorio"),
+    telefono: z.string(),
     planSaasId: z.number({
       required_error: "Plan es obligatorio",
     }),
@@ -70,7 +66,7 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
   const initialValues = {
     nombre: "",
     descripcion: "",
-    rubroId: null,
+    rubroId: undefined,
     pais: "",
     provincia: "",
     ciudad: "",
@@ -79,21 +75,21 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
     altura: "",
     usaFacturacion: false,
     tipoFacturacion: "",
-    moneda: null,
-    tipoDocumento: null,
+    moneda: undefined,
+    tipoDocumento: undefined,
     numeroDocumento: "",
     email: "",
     telefono: "",
-    planSaasId: null,
+    planSaasId: undefined,
     ...defaultValues,
   };
 
   const convertedValues = {
     ...initialValues,
     usaFacturacion: initialValues.tipoFacturacion !== "",
-    tipoFacturacion: facturaciones[initialValues.tipoFacturacion] ?? null,
-    moneda: monedas[initialValues.moneda] ?? null,
-    tipoDocumento: documentos[initialValues.tipoDocumento] ?? null,
+    tipoFacturacion: facturaciones[initialValues.tipoFacturacion] ?? undefined,
+    moneda: monedas[initialValues.moneda] ?? undefined,
+    tipoDocumento: documentos[initialValues.tipoDocumento] ?? undefined,
   };
 
   const form = useForm({

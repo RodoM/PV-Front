@@ -10,14 +10,6 @@ export const columns = [
     accessorKey: "nombre",
   },
   {
-    header: "Direccion IP",
-    accessorKey: "direccionIP",
-  },
-  {
-    header: "Direcion MAC",
-    accessorKey: "direccionMAC",
-  },
-  {
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => <ActionCell row={row} />,

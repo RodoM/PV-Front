@@ -21,8 +21,6 @@ import { toast } from "sonner";
 
 const schema = z.object({
   nombre: z.string().nonempty("El nombre es obligatorio"),
-  direccionIP: z.string().nonempty("El IP es obligatorio"),
-  direccionMAC: z.string().nonempty("La direccion MAC es obligatorio"),
 });
 
 function SalesStandForm({ salesStand, closeModal }) {
@@ -34,8 +32,6 @@ function SalesStandForm({ salesStand, closeModal }) {
     resolver: zodResolver(schema),
     defaultValues: {
       nombre: salesStand?.nombre || "",
-      direccionIP: salesStand?.direccionIP || "",
-      direccionMAC: salesStand?.direccionMAC || "",
     },
   });
 
@@ -96,36 +92,6 @@ function SalesStandForm({ salesStand, closeModal }) {
               <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input placeholder="Nombre del puesto" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Dirección IP */}
-        <FormField
-          name="direccionIP"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Dirección IP</FormLabel>
-              <FormControl>
-                <Input placeholder="Ej: 192.168.0.1" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Dirección MAC */}
-        <FormField
-          name="direccionMAC"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Dirección MAC</FormLabel>
-              <FormControl>
-                <Input placeholder="Ej: 00:1B:44:11:3A:B7" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
