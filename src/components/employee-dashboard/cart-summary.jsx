@@ -205,11 +205,12 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
                             <SelectValue placeholder="Seleccione la forma de pago" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="0">Tarjeta de crédito</SelectItem>
-                            <SelectItem value="1">Tarjeta de débito</SelectItem>
-                            <SelectItem value="2">Transferencia bancaria</SelectItem>
-                            <SelectItem value="3">Paypal</SelectItem>
-                            <SelectItem value="4">Mercado Pago</SelectItem>
+                            <SelectItem value="0">Efectivo</SelectItem>
+                            <SelectItem value="1">Transferencia</SelectItem>
+                            <SelectItem value="2">Débito</SelectItem>
+                            <SelectItem value="3">Crédito</SelectItem>
+                            <SelectItem value="4">QR</SelectItem>
+                            <SelectItem value="5">MODO</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
