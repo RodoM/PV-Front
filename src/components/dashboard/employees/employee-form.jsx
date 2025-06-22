@@ -14,24 +14,34 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 const schema = z.object({
-  email: z.string().email("El email es inválido"),
-  password: z.string().nonempty("Contraseña es obligatoria"),
+  email: z.string().email("Email no válido"),
+  password: z
+    .string()
+    .nonempty("Contraseña es obligatoria")
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+    .refine((val) => /(?=.*\d)(?=.*[A-Z])/.test(val), {
+      message: "La contraseña debe incluir al menos un número y una letra mayúscula",
+    }),
   nombre: z.string().nonempty("El nombre es obligatorio"),
   apellido: z.string().nonempty("El apellido es obligatorio"),
   tipoUsuario: z.coerce.number().int({ message: "Debe ser un número entero" }),
-  tipoDocumento: z.coerce.number().int({ message: "Debe ser un número entero" }),
+  tipoDocumento: z.number({
+    required_error: "Tipo de documento es obligatorio",
+  }),
   numeroDocumento: z.string().nonempty("Número de documento es obligatorio"),
-  avatarUrl: z
-    .string()
-    .trim()
-    .refine((val) => val === "" || z.string().url().safeParse(val).success, {
-      message: "Debe ser una URL válida o dejar vacío",
-    }),
+  imagenUrl: z.string().optional(),
 });
 
 function EmployeeForm({ employee, closeModal }) {
@@ -102,12 +112,12 @@ function EmployeeForm({ employee, closeModal }) {
             type: "text",
             placeholder: "Apellido del empleado",
           },
-          { name: "tipoUsuario", label: "Tipo Usuario", type: "text", placeholder: "1, 2, 3" },
+          // { name: "tipoUsuario", label: "Tipo Usuario", type: "number", placeholder: "1, 2" },
           {
             name: "tipoDocumento",
             label: "Tipo Documento",
-            type: "text",
-            placeholder: "1, 2, 3, 4",
+            type: "number",
+            placeholder: "0, 1, 2",
           },
           { name: "numeroDocumento", label: "Numero Documento", type: "text" },
           { name: "avatarUrl", label: "Avatar URL", type: "text", placeholder: "https://..." },
@@ -127,6 +137,28 @@ function EmployeeForm({ employee, closeModal }) {
             )}
           />
         ))}
+        <FormField
+          key={name}
+          name={name}
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo Usuario</FormLabel>
+              <FormControl>
+                <Select defaultValue={String(field.value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione el tipo de usuario" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Administador</SelectItem>
+                    <SelectItem value="2">Vendedor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={closeModal}>
