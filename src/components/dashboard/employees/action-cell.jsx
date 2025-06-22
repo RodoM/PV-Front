@@ -1,4 +1,6 @@
 import { useState } from "react";
+import api from "@/lib/axios";
+import { useRefresh } from "@/providers/refresh-context";
 import { EllipsisVertical, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -26,18 +28,46 @@ import { Button } from "@/components/ui/button";
 import EmployeeForm from "./employee-form";
 
 function ActionCell({ row }) {
+  const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(false);
   const [showDisable, setShowDisable] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
   const onDisable = () => {
-    console.log("Deshabilitando empleado:", row.original.name);
+    const isActive = row.original.activo;
+
     setLoading(true);
-    setTimeout(() => {
-      toast.success("Empleado deshabilitado correctamente");
-      setLoading(false);
-      setShowDisable(false);
-    }, 2000);
+    if (isActive) {
+      api
+        .delete(`/user/disable/${row.original.id}`)
+        .then(() => {
+          toast.success("Empleado deshabilitado correctamente");
+          setShowDisable(false);
+          triggerRefresh();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al deshabilitar el Empleado");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      api
+        .put(`/user/activate/${row.original.id}`)
+        .then(() => {
+          toast.success("Empleado habilitado correctamente");
+          setShowDisable(false);
+          triggerRefresh();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al habilitar el Empleado");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
 
   return (
@@ -54,7 +84,7 @@ function ActionCell({ row }) {
               setShowDisable(true);
             }}
           >
-            {row.original.enabled ? "Deshabilitar" : "Habilitar"}
+            {row.original.activo ? "Deshabilitar" : "Habilitar"}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={(e) => {
@@ -67,9 +97,15 @@ function ActionCell({ row }) {
           <AlertDialog open={showDisable} onOpenChange={setShowDisable}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Deshabilitar empleado</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {row.original.activo ? "Deshabilitar" : "Habilitar"} empleado
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  ¿Seguro que deseas deshabilitar al empleado? No podrá acceder al sistema.
+                  ¿Seguro que deseas {row.original.activo ? "deshabilitar" : "habilitar"} al
+                  empleado?
+                  {row.original.activo
+                    ? " No podrá acceder al sistema"
+                    : " Podrá volver a acceder al sistema"}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

@@ -76,9 +76,7 @@ export function SignInForm() {
             <Alert variant="destructive" className="mb-6">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                Email y/o contraseña incorrectos. Por favor, intenta nuevamente.
-              </AlertDescription>
+              <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
           <Form {...form}>
