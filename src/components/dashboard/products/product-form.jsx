@@ -45,7 +45,7 @@ const schema = z.object({
     required_error: "Tipo de unidad de medida es obligatorio",
     invalid_type_error: "Debe ser una opción válida",
   }),
-  codigoBarra: z.string().nonempty("Código de barras es obligatorio"),
+  codigoBarra: z.string().optional(),
   descripcion: z.string().optional(),
   imagenUrl: z.string().optional(),
   ubicacion: z.string().optional(),
