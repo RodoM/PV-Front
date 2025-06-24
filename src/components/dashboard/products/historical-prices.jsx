@@ -30,7 +30,7 @@ function HistoricalPrices({ productoNegocioId }) {
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, [fechaHoy, productoNegocioId]);
+  }, []);
 
   if (loading) {
     return (
