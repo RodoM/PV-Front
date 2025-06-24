@@ -50,7 +50,7 @@ function PriceForm({ productoNegocioId, closeModal }) {
         onClose();
       })
       .catch((error) => {
-        const { message } = error.response?.data || "Error al cargar el precio";
+        const message = error.response?.data?.message || "Error al cargar el precio";
         toast.error(message);
       })
       .finally(() => {

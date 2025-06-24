@@ -71,7 +71,7 @@ function UpdateProductForm({ product, closeModal }) {
         form.reset();
       })
       .catch((error) => {
-        const { message } = error.response?.data || "Error al editar el producto";
+        const message = error.response?.data?.message || "Error al editar el producto";
         toast.error(message);
       })
       .finally(() => {

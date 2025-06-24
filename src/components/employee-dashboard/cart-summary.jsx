@@ -120,7 +120,7 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
         setIsDialogOpen(false);
       })
       .catch((error) => {
-        const { message } = error.response?.data || "Error al confirmar la compra";
+        const message = error.response?.data?.message || "Error al confirmar la compra";
         toast.error(message);
       })
       .finally(() => {

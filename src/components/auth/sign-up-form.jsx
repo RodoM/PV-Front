@@ -69,7 +69,7 @@ export function SignUpForm() {
         setCurrentStep((prev) => prev + 1);
         toast.success("Cuenta creada exitosamente");
       } catch (error) {
-        const { message } = error.response?.data || "Error al registrar el usuario";
+        const message = error.response?.data?.message || "Error al registrar el usuario";
         toast.error(message);
       }
     }
@@ -86,7 +86,7 @@ export function SignUpForm() {
         setFormData((prev) => ({ ...prev, step2: data }));
         setCurrentStep((prev) => prev + 1);
       } catch (error) {
-        const { message } = error.response?.data || "Error al registrar el negocio";
+        const message = error.response?.data?.message || "Error al registrar el negocio";
         toast.error(message);
       }
     }

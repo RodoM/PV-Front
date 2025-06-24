@@ -93,7 +93,7 @@ function EmployeeForm({ employee, closeModal }) {
           form.reset();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al modificar el Empleado";
+          const message = error.response?.data?.message || "Error al modificar el Empleado";
           toast.error(message);
         })
         .finally(() => {
@@ -109,7 +109,7 @@ function EmployeeForm({ employee, closeModal }) {
           form.reset();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al agregar el Empleado";
+          const message = error.response?.data?.message || "Error al agregar el Empleado";
           toast.error(message);
         })
         .finally(() => {

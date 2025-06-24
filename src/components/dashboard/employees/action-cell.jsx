@@ -46,7 +46,7 @@ function ActionCell({ row }) {
           triggerRefresh();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al deshabilitar el Empleado";
+          const message = error.response?.data?.message || "Error al deshabilitar el Empleado";
           toast.error(message);
         })
         .finally(() => {
@@ -61,7 +61,7 @@ function ActionCell({ row }) {
           triggerRefresh();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al habilitar el Empleado";
+          const message = error.response?.data?.message || "Error al habilitar el Empleado";
           toast.error(message);
         })
         .finally(() => {

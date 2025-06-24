@@ -43,7 +43,7 @@ function TicketForm({ ventaId, closeModal }) {
         closeModal();
       })
       .catch((error) => {
-        const { message } = error.response?.data || "Error al enviar el ticket";
+        const message = error.response?.data?.message || "Error al enviar el ticket";
         toast.error(message);
       })
       .finally(() => {

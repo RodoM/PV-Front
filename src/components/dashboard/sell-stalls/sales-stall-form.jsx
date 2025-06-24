@@ -55,7 +55,7 @@ function SalesStandForm({ salesStand, closeModal }) {
           form.reset();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al modificar el Puesto";
+          const message = error.response?.data?.message || "Error al modificar el Puesto";
           toast.error(message);
         })
         .finally(() => {
@@ -71,7 +71,7 @@ function SalesStandForm({ salesStand, closeModal }) {
           form.reset();
         })
         .catch((error) => {
-          const { message } = error.response?.data || "Error al agregar el Puesto";
+          const message = error.response?.data?.message || "Error al agregar el Puesto";
           toast.error(message);
         })
         .finally(() => {
