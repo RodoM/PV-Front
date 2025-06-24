@@ -45,10 +45,15 @@ const schema = z.object({
     required_error: "Tipo de unidad de medida es obligatorio",
     invalid_type_error: "Debe ser una opción válida",
   }),
-  codigoBarra: z.string().optional(),
+  codigoBarra: z.string().nullable().optional(),
   descripcion: z.string().optional(),
   imagenUrl: z.string().optional(),
   ubicacion: z.string().optional(),
+  valor: z.preprocess((val) => {
+    if (val === "" || val === null || val === undefined) return undefined;
+    const num = Number(val);
+    return isNaN(num) ? val : num;
+  }, z.number().optional()),
   stockActual: z.preprocess(
     (val) => Number(val),
     z.number().nonnegative("El stock debe ser mayor a cero")
@@ -75,10 +80,11 @@ function ProductForm({ product, onProductAdded, closeModal }) {
       marcaId: product?.marcaId || "",
       rubroId: product?.rubroId || "",
       tipoUnidadMedida: product?.tipoUnidadMedida || "",
-      codigoBarra: product?.codigoBarra || "",
+      codigoBarra: undefined,
       descripcion: product?.descripcion || "",
       imagenUrl: product?.imagenUrl || "",
       ubicacion: product?.ubicacion || "",
+      valor: undefined,
       stockActual: product?.stockActual || 0,
       stockMinimo: product?.stockMinimo || 0,
       stockMaximo: product?.stockMaximo || 0,
@@ -142,6 +148,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
         descripcion: data.descripcion,
         imagenUrl: data.imagenUrl,
         ubicacion: data.ubicacion,
+        valor: Number(data.valor),
         stockActual: Number(data.stockActual),
         stockMinimo: Number(data.stockMinimo),
         stockMaximo: Number(data.stockMaximo),
@@ -373,6 +380,20 @@ function ProductForm({ product, onProductAdded, closeModal }) {
             )}
           />
         </div>
+
+        <FormField
+          name="valor"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Precio</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Ingrese el nuevo precio de producto" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex flex-col md:flex-row items-start gap-4">
           <FormField
