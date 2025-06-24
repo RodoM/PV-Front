@@ -118,9 +118,7 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
   }));
 
   useEffect(() => {
-    api
-      .get("/sector/list", { pageNumber: 1, pageSize: 1000 })
-      .then((res) => setRubroOptions(res.data.data));
+    api.get("/sector/list").then((res) => setRubroOptions(res.data.data));
   }, []);
 
   useEffect(() => {

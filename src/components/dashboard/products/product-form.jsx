@@ -94,7 +94,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api.get("/category/list", { pageNumber: 1, pageSize: 1000 }).then((res) => {
+    api.get("/category/list", { params: { pageNumber: 1, pageSize: 1000 } }).then((res) => {
       setCategories(res.data.data.data);
     });
   }, [setCategories]);
@@ -102,7 +102,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
-    api.get("/brand/list", { pageNumber: 1, pageSize: 1000 }).then((res) => {
+    api.get("/brand/list", { params: { pageNumber: 1, pageSize: 1000 } }).then((res) => {
       setBrands(res.data.data.data);
     });
   }, [setBrands]);
@@ -110,7 +110,7 @@ function ProductForm({ product, onProductAdded, closeModal }) {
   const [industries, setIndustries] = useState([]);
 
   useEffect(() => {
-    api.get("/sector/list", { pageNumber: 1, pageSize: 1000 }).then((res) => {
+    api.get("/sector/list").then((res) => {
       setIndustries(res.data.data);
     });
   }, [setIndustries]);
