@@ -3,15 +3,24 @@ import { BrowserMultiFormatReader } from "@zxing/library";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Camera, X, Package, AlertCircle } from "lucide-react";
+import { tipoUnidadMedidas, unidadesCompatibles } from "@/enums/index";
 
-export function BarcodeScanner({ products, onAddToCart }) {
+export function BarcodeScanner({ cartItems, products, onAddToCart }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedProduct, setScannedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [tipoUnidadMedida, setTipoUnidadMedida] = useState(null);
   const [error, setError] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
 
@@ -72,10 +81,11 @@ export function BarcodeScanner({ products, onAddToCart }) {
   };
 
   const handleBarcodeScanned = (barcode) => {
-    const foundProduct = products.find((product) => product.barcode === barcode);
+    const foundProduct = products.find((product) => product.codigoBarra === barcode);
 
     if (foundProduct) {
       setScannedProduct(foundProduct);
+      setTipoUnidadMedida(tipoUnidadMedidas[foundProduct.tipoUnidadMedida]);
       setQuantity(1);
       stopScanning();
     } else {
@@ -84,11 +94,22 @@ export function BarcodeScanner({ products, onAddToCart }) {
   };
 
   const handleAddProduct = () => {
-    if (scannedProduct && quantity > 0 && quantity <= scannedProduct.stock) {
-      onAddToCart(scannedProduct, quantity);
+    if (scannedProduct && quantity > 0) {
+      onAddToCart(
+        {
+          ...scannedProduct,
+          tipoUnidadMedida: tipoUnidadMedidas[scannedProduct.tipoUnidadMedida],
+          unidadSeleccionada: tipoUnidadMedida,
+        },
+        quantity
+      );
       handleCloseDialog();
     }
   };
+
+  const isDisabled = cartItems.some(
+    (item) => item.productoNegocioId === scannedProduct?.productoNegocioId
+  );
 
   const handleCloseDialog = () => {
     setIsOpen(false);
@@ -200,17 +221,19 @@ export function BarcodeScanner({ products, onAddToCart }) {
                     <div className="flex items-center gap-3">
                       <div className="w-16 h-16 relative bg-gray-100 rounded-lg overflow-hidden">
                         <img
-                          src={scannedProduct.image || "/placeholder.svg"}
-                          alt={scannedProduct.name}
+                          src={scannedProduct.imagenUrl || "/images/placeholder.svg"}
+                          alt={scannedProduct.nombre}
                           className="object-cover"
                         />
                       </div>
 
                       <div className="flex-1">
-                        <h3 className="font-semibold">{scannedProduct.name}</h3>
-                        <p className="text-sm text-gray-600">{scannedProduct.brand}</p>
-                        <p className="font-bold text-lg">${scannedProduct.price.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">Stock: {scannedProduct.stock}</p>
+                        <h3 className="font-semibold">{scannedProduct.nombre}</h3>
+                        <p className="text-sm text-gray-600">{scannedProduct.marca.nombre}</p>
+                        <p className="font-bold text-lg">
+                          ${scannedProduct.precioActivo.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-gray-500">Stock: {scannedProduct.stockActual}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -222,16 +245,32 @@ export function BarcodeScanner({ products, onAddToCart }) {
                     id="quantity"
                     type="number"
                     min="1"
-                    max={scannedProduct.stock}
                     value={quantity}
                     onChange={(e) => setQuantity(Number.parseInt(e.target.value) || 1)}
                   />
                 </div>
 
+                <Select
+                  onValueChange={(value) => setTipoUnidadMedida(Number(value))}
+                  defaultValue={tipoUnidadMedidas[scannedProduct.tipoUnidadMedida].toString()}
+                  disabled={isDisabled}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione la u. de medida" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {unidadesCompatibles[scannedProduct.tipoUnidadMedida].map((unidad) => (
+                      <SelectItem key={unidad} value={tipoUnidadMedidas[unidad].toString()}>
+                        {unidad}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <div className="flex gap-2">
                   <Button
                     onClick={handleAddProduct}
-                    disabled={quantity <= 0 || quantity > scannedProduct.stock}
+                    disabled={quantity <= 0 || quantity > scannedProduct.stockActual}
                     className="flex-1"
                   >
                     <Package className="w-4 h-4 mr-2" />

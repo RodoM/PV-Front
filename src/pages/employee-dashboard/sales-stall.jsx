@@ -96,7 +96,7 @@ export default function PuntoDeVenta() {
                   className="pl-10"
                 />
               </div>
-              <BarcodeScanner products={data} onAddToCart={handleAddToCart} />
+              <BarcodeScanner cartItems={cartItems} products={data} onAddToCart={handleAddToCart} />
             </div>
           </div>
 
