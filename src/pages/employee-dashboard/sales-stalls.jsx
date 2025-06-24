@@ -20,8 +20,7 @@ function SalesStalls() {
         const { data } = res.data;
         setData(data.data);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         toast.error("Error al cargar los puntos de venta");
       })
       .finally(() => setLoading(false));

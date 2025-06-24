@@ -22,8 +22,7 @@ export function Header() {
         const { data } = response.data;
         setBusiness(data);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
         toast.error("Error al cargar los datos del negocio");
       });
   }, [setBusiness]);

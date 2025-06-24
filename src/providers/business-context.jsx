@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./auth-context";
 import api from "@/lib/axios";
+import { toast } from "sonner";
 
 const BusinessContext = createContext();
 
@@ -18,9 +19,6 @@ export const BusinessProvider = ({ children }) => {
         const { data } = response.data;
         setCashbox(data);
       })
-      .catch((error) => {
-        console.error(error);
-      })
       .finally(() => setLoadingCashbox(false));
   };
 
@@ -31,8 +29,8 @@ export const BusinessProvider = ({ children }) => {
         const { data } = response.data;
         setBusiness(data);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("Error al cargar los datos del negocio");
       });
   };
 

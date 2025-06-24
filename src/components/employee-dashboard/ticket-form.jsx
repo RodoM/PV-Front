@@ -1,7 +1,6 @@
 import { useState } from "react";
-import api from "@/lib/axios";
-import { useRefresh } from "@/providers/refresh-context";
 import { LoaderCircle } from "lucide-react";
+import api from "@/lib/axios";
 import {
   Form,
   FormControl,
@@ -11,46 +10,40 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 
 const schema = z.object({
-  productoNegocioId: z.number(),
-  valor: z.preprocess((val) => Number(val), z.number().min(1, "El precio debe ser mayor a cero")),
+  ventaId: z.number(),
+  email: z.string().email(),
 });
 
-function PriceForm({ productoNegocioId, closeModal }) {
-  const { triggerRefresh } = useRefresh();
+function TicketForm({ ventaId, closeModal }) {
   const [loading, setLoading] = useState(false);
 
-  const form = useForm({
+  const ticketForm = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      productoNegocioId: productoNegocioId,
-      valor: 0,
+      ventaId: ventaId,
+      email: "",
     },
   });
 
-  const onClose = () => {
-    form.reset();
-    closeModal();
-  };
-
-  const onSubmit = (data) => {
+  const onTicketSubmit = (data) => {
     setLoading(true);
+
     api
-      .post("/price/register", data)
+      .post("/sale/send-ticket", data)
       .then(() => {
-        toast.success("Precio cargado correctamente");
-        triggerRefresh();
-        onClose();
+        toast.success("Ticket enviado correctamente");
+        closeModal();
       })
       .catch((error) => {
-        const { message } = error.response?.data || "Error al cargar el precio";
+        const { message } = error.response?.data || "Error al enviar el ticket";
         toast.error(message);
       })
       .finally(() => {
@@ -59,16 +52,16 @@ function PriceForm({ productoNegocioId, closeModal }) {
   };
 
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+    <Form {...ticketForm}>
+      <form className="space-y-4" onSubmit={ticketForm.handleSubmit(onTicketSubmit)}>
         <FormField
-          name="valor"
-          control={form.control}
+          name="email"
+          control={ticketForm.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Precio</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Ingrese el nuevo precio de producto" {...field} />
+                <Input placeholder="Ingrese el mail del cliente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,7 +69,7 @@ function PriceForm({ productoNegocioId, closeModal }) {
         />
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="outline" onClick={closeModal}>
             Cancelar
           </Button>
           <Button type="submit" disabled={loading}>
@@ -89,4 +82,4 @@ function PriceForm({ productoNegocioId, closeModal }) {
   );
 }
 
-export default PriceForm;
+export default TicketForm;

@@ -58,8 +58,7 @@ export function BarcodeScanner({ cartItems, products, onAddToCart }) {
           }
         });
       }
-    } catch (err) {
-      console.error("Error accessing camera:", err);
+    } catch {
       setCameraPermission(false);
       setError("No se pudo acceder a la cámara. Verifica los permisos.");
       setIsScanning(false);

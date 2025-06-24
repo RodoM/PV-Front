@@ -30,7 +30,6 @@ function Employees() {
         setData(data.data);
         setPageCount(data.totalPages);
       })
-      .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [pageNumber, pageSize, refreshKey]);
 

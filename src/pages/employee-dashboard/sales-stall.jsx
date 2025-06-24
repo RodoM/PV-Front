@@ -9,6 +9,14 @@ import { BarcodeScanner } from "@/components/employee-dashboard/barcode-scanner"
 import { ProductList } from "@/components/employee-dashboard/product-list";
 import { CartSummary } from "@/components/employee-dashboard/cart-summary";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import TicketForm from "@/components/employee-dashboard/ticket-form";
 
 export default function PuntoDeVenta() {
   const navigate = useNavigate();
@@ -19,6 +27,8 @@ export default function PuntoDeVenta() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItems, setCartItems] = useState([]);
+  const [ticketDialog, setTicketDialog] = useState(false);
+  const [ventaId, setVentaId] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -30,7 +40,6 @@ export default function PuntoDeVenta() {
         const { data } = res.data;
         setData(data.data);
       })
-      .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [refreshKey]);
 
@@ -127,13 +136,33 @@ export default function PuntoDeVenta() {
             cartItems={cartItems}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            onConfirmPurchase={() => {
+            onConfirmPurchase={(ventaId) => {
+              setVentaId(ventaId);
+              setTicketDialog(true);
               setCartItems([]);
               triggerRefresh();
             }}
           />
         </div>
       </div>
+
+      <Dialog open={ticketDialog} onOpenChange={setTicketDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enviar ticket</DialogTitle>
+            <DialogDescription>
+              Ingrese el mail del cliente para enviarle el ticket
+            </DialogDescription>
+          </DialogHeader>
+          <TicketForm
+            ventaId={ventaId}
+            closeModal={() => {
+              setTicketDialog(false);
+              setVentaId(null);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

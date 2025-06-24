@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import SalesStallForm from "@/components/dashboard/sell-stalls/sales-stall-form";
 import { useRefresh } from "@/providers/refresh-context";
+import { toast } from "sonner";
 
 function SalesStalls() {
   const [addDialog, setAddDialog] = useState(false);
@@ -30,7 +31,9 @@ function SalesStalls() {
         setData(data.data); // lista
         setPageCount(data.totalPages); // paginas
       })
-      .catch((err) => console.error("Error al cargar puestos:", err))
+      .catch(() => {
+        toast.error("Error al cargar los puestos de venta");
+      })
       .finally(() => setLoading(false));
   }, [pageNumber, pageSize, nombre, refreshKey]);
 

@@ -94,34 +94,25 @@ function ProductForm({ product, onProductAdded, closeModal }) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/category/list")
-      .then((res) => {
-        setCategories(res.data.data.data);
-      })
-      .catch((err) => console.error(err));
+    api.get("/category/list").then((res) => {
+      setCategories(res.data.data.data);
+    });
   }, [setCategories]);
 
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/brand/list")
-      .then((res) => {
-        setBrands(res.data.data.data);
-      })
-      .catch((err) => console.error(err));
+    api.get("/brand/list").then((res) => {
+      setBrands(res.data.data.data);
+    });
   }, [setBrands]);
 
   const [industries, setIndustries] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/sector/list")
-      .then((res) => {
-        setIndustries(res.data.data);
-      })
-      .catch((err) => console.error(err));
+    api.get("/sector/list").then((res) => {
+      setIndustries(res.data.data);
+    });
   }, [setIndustries]);
 
   const handleBarcodeScanned = (barcode) => {
@@ -166,8 +157,8 @@ function ProductForm({ product, onProductAdded, closeModal }) {
         form.reset();
       })
       .catch((error) => {
-        console.error(error);
-        toast.error("Error al agregar el producto");
+        const { message } = error.response?.data || "Error al agregar el producto";
+        toast.error(message);
       })
       .finally(() => {
         setLoading(false);

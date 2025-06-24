@@ -46,7 +46,6 @@ function ForgotPasswordForm({ closeModal }) {
       })
       .catch((error) => {
         const { message } = error.response?.data || "Error al enviar el mail";
-        console.error(error);
         toast.error(message);
       })
       .finally(() => {

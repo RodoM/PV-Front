@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import DataTable from "@/components/ui/data-table";
 import { columns } from "@/components/dashboard/sales/sales-columns";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 function Sales() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -21,7 +22,9 @@ function Sales() {
         setData(data.data);
         setPageCount(data.totalPages);
       })
-      .catch((err) => console.error(err))
+      .catch(() => {
+        toast.error("Error al cargar las ventas");
+      })
       .finally(() => setLoading(false));
   }, [pageNumber, pageSize]);
 

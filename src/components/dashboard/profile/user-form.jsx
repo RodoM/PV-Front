@@ -116,8 +116,8 @@ function UserForm({ userData }) {
         toast.success("Usuario modificado correctamente");
       })
       .catch((error) => {
-        console.error(error);
-        toast.error("Error al modificar el usuario");
+        const { message } = error.response?.data || "Error al modificar el usuario";
+        toast.error(message);
       })
       .finally(() => {
         setLoading(false);

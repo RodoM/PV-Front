@@ -6,6 +6,7 @@ import TotalProducts from "@/components/dashboard/resume/total-products";
 import MonthlySalesChart from "@/components/dashboard/resume/monthly-sales-chart";
 import TopProducts from "@/components/dashboard/resume/top-products";
 import { LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -43,8 +44,8 @@ export default function Dashboard() {
         const { data } = response.data;
         salesPerMonth(data.data);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("Error al cargar las ventas");
       })
       .finally(() => {
         setLoading(false);

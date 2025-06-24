@@ -14,8 +14,7 @@ function TotalProducts() {
       .then((res) => {
         const { data } = res.data;
         setTotalProducts(data.data.length);
-      })
-      .catch((err) => console.error(err));
+      });
   }, []);
 
   return (

@@ -118,17 +118,11 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
   }));
 
   useEffect(() => {
-    api
-      .get("/sector/list")
-      .then((res) => setRubroOptions(res.data.data))
-      .catch((err) => console.error(err));
+    api.get("/sector/list").then((res) => setRubroOptions(res.data.data));
   }, []);
 
   useEffect(() => {
-    api
-      .get("/plan/list")
-      .then((res) => setPlanOptions(res.data.data))
-      .catch((err) => console.error(err));
+    api.get("/plan/list").then((res) => setPlanOptions(res.data.data));
   }, []);
 
   return (

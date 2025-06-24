@@ -114,14 +114,14 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
         total,
         detalles,
       })
-      .then(() => {
+      .then((response) => {
         toast.success("¡Compra confirmada!");
-        onConfirmPurchase();
+        onConfirmPurchase(response.data.data.id);
         setIsDialogOpen(false);
       })
       .catch((error) => {
-        console.error(error);
-        toast.error("Error al confirmar la compra");
+        const { message } = error.response?.data || "Error al confirmar la compra";
+        toast.error(message);
       })
       .finally(() => {
         setLoading(false);
@@ -236,10 +236,6 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
                           <SelectContent>
                             <SelectItem value="0">Venta</SelectItem>
                             <SelectItem value="1">Consumo interno</SelectItem>
-                            <SelectItem value="2">Anulación venta</SelectItem>
-                            <SelectItem value="3">Anulación consumo interno</SelectItem>
-                            <SelectItem value="4">Compra</SelectItem>
-                            <SelectItem value="5">Anulación compra</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>

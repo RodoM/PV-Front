@@ -21,8 +21,8 @@ function Settings() {
       setBusiness({ ...data, id: business.id });
       toast.success("Datos actualizados exitosamente");
     } catch (error) {
-      console.error(error);
-      toast.error("Error al actualizar los datos");
+      const { message } = error.response?.data || "Error al actualizar los datos";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

@@ -38,8 +38,7 @@ function CashBox() {
         );
         fetchCashBoxData();
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
         toast.error(`Error al ${cashbox && !cashbox.estaCerrada ? "cerrar" : "abrir"} la caja.`);
       })
       .finally(() => setLoading(false));

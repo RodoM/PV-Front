@@ -69,16 +69,8 @@ export function SignUpForm() {
         setCurrentStep((prev) => prev + 1);
         toast.success("Cuenta creada exitosamente");
       } catch (error) {
-        let errorMessage = "Ocurrió un error al registrar el usuario";
-
-        if (error.response?.data?.errors?.[0]) {
-          const err = error.response.data.errors[0];
-          if (err.includes("already taken")) {
-            errorMessage = "Este email ya está registrado";
-          }
-        }
-
-        toast.error(errorMessage);
+        const { message } = error.response?.data || "Error al registrar el usuario";
+        toast.error(message);
       }
     }
 
@@ -94,7 +86,7 @@ export function SignUpForm() {
         setFormData((prev) => ({ ...prev, step2: data }));
         setCurrentStep((prev) => prev + 1);
       } catch (error) {
-        const { message } = error.response.data;
+        const { message } = error.response?.data || "Error al registrar el negocio";
         toast.error(message);
       }
     }

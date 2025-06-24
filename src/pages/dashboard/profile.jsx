@@ -16,8 +16,7 @@ function Profile() {
         const { data } = res.data;
         setUser(data);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         toast.error("Error al cargar los datos del usuario");
       })
       .finally(() => setLoading(false));

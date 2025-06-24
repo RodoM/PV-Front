@@ -11,6 +11,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import ProductForm from "@/components/dashboard/products/product-form";
+import { toast } from "sonner";
 
 function Products() {
   const [addDialog, setAddDialog] = useState(false);
@@ -31,7 +32,9 @@ function Products() {
         setData(data.data);
         setPageCount(data.totalPages);
       })
-      .catch((err) => console.error(err))
+      .catch(() => {
+        toast.error("Error al cargar los productos");
+      })
       .finally(() => setLoading(false));
   }, [pageNumber, pageSize, nombre, refreshKey]);
 

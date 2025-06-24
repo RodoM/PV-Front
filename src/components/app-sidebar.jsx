@@ -1,3 +1,5 @@
+import { useSidebar } from "@/components/ui/sidebar";
+import { useBusiness } from "@/providers/business-context";
 import { UserSearch, Store, Settings2, ChartSpline, Package, Tag, MapPin } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -11,7 +13,6 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useBusiness } from "@/providers/business-context";
 import CashBox from "./dashboard/sidebar/cash-box";
 
 const data = {
@@ -50,6 +51,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }) {
+  const { state } = useSidebar();
   const { business } = useBusiness();
 
   return (
@@ -75,7 +77,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.routes} />
-        <CashBox />
+        {state === "expanded" && <CashBox />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
