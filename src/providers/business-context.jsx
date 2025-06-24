@@ -37,7 +37,7 @@ export const BusinessProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && user.negocioId) {
       fetchBusinessData();
       fetchCashBoxData();
     }

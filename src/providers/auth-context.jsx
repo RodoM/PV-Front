@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       token,
       name: decoded[claim + "name"] + " " + decoded[claim + "surname"],
       email: decoded[claim + "emailaddress"],
-      negocioId: Number(decoded["NegocioId"]),
+      negocioId: decoded["NegocioId"] === "" ? null : Number(decoded["NegocioId"]),
       role: decoded["TipoUsuario"],
     };
   };

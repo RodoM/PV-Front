@@ -37,21 +37,24 @@ const schema = z
     codigoPostal: z.string(),
     calle: z.string(),
     altura: z.string(),
-    usaFacturacion: z.boolean().default(false),
-    tipoFacturacion: z.number().nullable(),
-    moneda: z.number(),
-    tipoDocumento: z.number(),
+    usaFacturacion: z.boolean(),
+    tipoFacturacion: z.number().nullable().optional(),
+    moneda: z.number().optional(),
+    tipoDocumento: z.number().optional(),
     numeroDocumento: z.string(),
     email: z.string().email("Email no válido"),
-    telefono: z.string(),
+    telefono: z.string().optional(),
     planSaasId: z.number({
       required_error: "Plan es obligatorio",
     }),
   })
   .refine(
     (data) => {
-      if (data.usaFacturacion && !data.tipoFacturacion) return false;
-      return true;
+      if (data.usaFacturacion) {
+        return data.tipoFacturacion !== null && data.tipoFacturacion !== undefined;
+      } else {
+        return data.tipoFacturacion === null || data.tipoFacturacion === undefined;
+      }
     },
     {
       message: "Debe seleccionar un tipo de facturación",
@@ -74,19 +77,21 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
     calle: "",
     altura: "",
     usaFacturacion: false,
-    tipoFacturacion: "",
+    tipoFacturacion: undefined,
     moneda: undefined,
     tipoDocumento: undefined,
     numeroDocumento: "",
     email: "",
-    telefono: "",
+    telefono: undefined,
     planSaasId: undefined,
     ...defaultValues,
   };
 
   const convertedValues = {
     ...initialValues,
-    usaFacturacion: initialValues.tipoFacturacion !== "",
+    usaFacturacion:
+      defaultValues?.usaFacturacion ??
+      (initialValues.tipoFacturacion !== "" && initialValues.tipoFacturacion !== undefined),
     tipoFacturacion: facturaciones[initialValues.tipoFacturacion] ?? undefined,
     moneda: monedas[initialValues.moneda] ?? undefined,
     tipoDocumento: documentos[initialValues.tipoDocumento] ?? undefined,
@@ -319,7 +324,15 @@ const Step2 = forwardRef(({ defaultValues }, ref) => {
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
-                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    if (!checked) {
+                      form.setValue("tipoFacturacion", null);
+                    }
+                  }}
+                />
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel>Facturación</FormLabel>
