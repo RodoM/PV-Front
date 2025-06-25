@@ -3,10 +3,6 @@ import { Badge } from "@/components/ui/badge";
 
 export const columns = [
   {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
     accessorKey: "nombre",
     header: "Nombre",
   },

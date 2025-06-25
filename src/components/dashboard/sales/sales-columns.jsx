@@ -1,14 +1,9 @@
 import { ArrowUpDown } from "lucide-react";
 import ActionCell from "./sales-action-cell";
-
-// sacar la busqueda
-// boton de agregar venta
+import { Badge } from "@/components/ui/badge";
+import { BadgeCheckIcon } from "lucide-react";
 
 export const columns = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
   {
     accessorKey: "fechaAlta",
     header: ({ column }) => {
@@ -52,7 +47,7 @@ export const columns = [
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Cantidad de productos
+          Productos vendidos (distintos)
           <ArrowUpDown className="h-4 w-4" />
         </div>
       );
@@ -83,6 +78,38 @@ export const columns = [
         minimumFractionDigits: 2,
       });
       return formatoARS.format(row.original.total || 0);
+    },
+  },
+  {
+    accessorKey: "tipo",
+    header: "Tipo",
+    cell: ({ row }) => {
+      const tipo = row.original?.comprobante?.tipoComprobante;
+
+      if (tipo === "ComprobanteVenta") {
+        return (
+          <Badge variant="secondary" className="bg-blue-500 text-white dark:bg-blue-600">
+            <BadgeCheckIcon className="mr-1 h-4 w-4" />
+            Venta
+          </Badge>
+        );
+      }
+
+      if (tipo === "ConsumoInterno") {
+        return <Badge variant="outline">Consumo</Badge>;
+      }
+
+      return <Badge variant="outline">Desconocido</Badge>;
+    },
+  },
+  {
+    accessorKey: "estado",
+    header: "Estado",
+    cell: ({ row }) => {
+      const comprobanteAnulacion = row.original?.comprobanteAnulacion;
+      const estado = comprobanteAnulacion ? "Anulada" : "Confirmada";
+      const variant = comprobanteAnulacion ? "inactive" : "active";
+      return <Badge variant={variant}>{estado}</Badge>;
     },
   },
   {

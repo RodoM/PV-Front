@@ -45,7 +45,7 @@ function ActionCell({ row }) {
             }}
           >
             <CirclePlus className="h-4 w-4" />
-            Cargar precio
+            Modificar precio
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={(e) => {
@@ -60,7 +60,7 @@ function ActionCell({ row }) {
           <Dialog open={priceDialog} onOpenChange={setPriceDialog}>
             <DialogContent className="h-screen md:h-auto md:max-h-[500px] 2xl:max-h-[650px] overflow-y-auto scrollable">
               <DialogHeader>
-                <DialogTitle>Cargar precio</DialogTitle>
+                <DialogTitle>Modificar precio</DialogTitle>
                 <DialogDescription>
                   Cargar un precio nuevo para {row.original.nombre}.
                 </DialogDescription>

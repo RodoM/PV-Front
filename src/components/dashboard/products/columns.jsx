@@ -3,12 +3,12 @@ import ActionCell from "./action-cell";
 
 export const columns = [
   {
-    accessorKey: "productoNegocioId",
-    header: "ID",
-  },
-  {
     accessorKey: "nombre",
     header: "Nombre",
+  },
+  {
+    accessorKey: "descripcion",
+    header: "Descripción",
   },
   {
     accessorKey: "marca.nombre",
