@@ -88,7 +88,9 @@ function SaleDetailSheet({ open, onOpenChange, sale }) {
                 CUIT: {business?.numeroDocumento}
               </SheetDescription>
               <div className="text-gray-600">Domicilio: {business?.domicilio}</div>
-              <div className="mt-2 font-bold text-base text-blue-600">COMPROBANTE DE VENTA</div>
+              <SheetDescription className="mt-2 font-bold text-base text-blue-600">
+                {sale.comprobante.tipoComprobante === "ComprobanteVenta" ? "Venta" : "Consumo"}
+              </SheetDescription>
               <div className="text-sm mt-1">
                 N°: <strong>{sale?.comprobante?.id}</strong>
               </div>
@@ -103,10 +105,19 @@ function SaleDetailSheet({ open, onOpenChange, sale }) {
 
             <div className="mb-4">
               <h3 className="font-bold text-base text-gray-900 mb-2">DETALLE DE PRODUCTOS</h3>
-              {sale?.detalles?.map((item, index) => (
-                <div key={index} className="flex justify-between flex-wrap text-sm border-b py-1">
-                  <span>{item.nombreProducto}</span>
-                  <span>{formatCurrency(item.importe)}</span>
+              {sale.detalles.map((item, index) => (
+                <div key={index} className="space-y-1 pb-2">
+                  <div className="font-medium">{item.nombreProducto}</div>
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>
+                      {item.cantidad
+                        ? `${item.cantidad} ${item.tipoUnidadMedida}`
+                        : item.peso
+                          ? `${item.peso} ${item.tipoUnidadMedida}`
+                          : `1 ${item.tipoUnidadMedida}`}
+                    </span>
+                    <span>{formatCurrency(item.importe)}</span>
+                  </div>
                 </div>
               ))}
             </div>
