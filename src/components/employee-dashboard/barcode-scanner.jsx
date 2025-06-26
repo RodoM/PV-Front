@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Camera, X, Package, AlertCircle } from "lucide-react";
 import { tipoUnidadMedidas, unidadesCompatibles } from "@/enums/index";
+import { toast } from "sonner";
 
 export function BarcodeScanner({ cartItems, products, onAddToCart }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ export function BarcodeScanner({ cartItems, products, onAddToCart }) {
   const [tipoUnidadMedida, setTipoUnidadMedida] = useState(null);
   const [error, setError] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
+  const [manualBarcode, setManualBarcode] = useState("");
 
   const videoRef = useRef(null);
   const codeReaderRef = useRef(null);
@@ -83,11 +85,13 @@ export function BarcodeScanner({ cartItems, products, onAddToCart }) {
     const foundProduct = products.find((product) => product.codigoBarra === barcode);
 
     if (foundProduct) {
+      setError(null);
       setScannedProduct(foundProduct);
       setTipoUnidadMedida(tipoUnidadMedidas[foundProduct.tipoUnidadMedida]);
       setQuantity(1);
       stopScanning();
     } else {
+      setScannedProduct(null);
       setError(`No se encontró ningún producto con el código: ${barcode}`);
     }
   };
@@ -102,7 +106,13 @@ export function BarcodeScanner({ cartItems, products, onAddToCart }) {
         },
         quantity
       );
-      handleCloseDialog();
+      toast.success(`"${scannedProduct.nombre}" agregado al pedido`);
+
+      setScannedProduct(null);
+      setQuantity(1);
+      setTipoUnidadMedida(null);
+      setError(null);
+      startScanning();
     }
   };
 
@@ -288,6 +298,34 @@ export function BarcodeScanner({ cartItems, products, onAddToCart }) {
                 </div>
               </div>
             )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="manual-barcode">Código de barras (manual)</Label>
+            <div className="flex gap-2">
+              <Input
+                id="manual-barcode"
+                value={manualBarcode}
+                onChange={(e) => setManualBarcode(e.target.value)}
+                placeholder="Escriba el código de barras"
+                className="flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleBarcodeScanned(manualBarcode);
+                    setManualBarcode("");
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                onClick={() => {
+                  handleBarcodeScanned(manualBarcode);
+                  setManualBarcode("");
+                }}
+              >
+                Buscar
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
