@@ -30,7 +30,7 @@ export const columns = [
       const fecha = new Date(row.original.fechaAlta);
       return fecha.toLocaleDateString("es-AR", {
         day: "2-digit",
-        month: "2-digit",
+        month: "short",
         year: "numeric",
       });
     },
