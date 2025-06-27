@@ -2,12 +2,12 @@ import ActionCell from "../sell-stalls/sales-stall-action-cell";
 
 export const columns = [
   {
-    header: "ID",
-    accessorKey: "id",
-  },
-  {
     header: "Nombre",
     accessorKey: "nombre",
+  },
+  {
+    header: "Fecha Creación",
+    accessorKey: "fechaAlta",
   },
   {
     accessorKey: "actions",

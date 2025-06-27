@@ -115,8 +115,8 @@ export function CartSummary({ cartItems, onUpdateQuantity, onRemoveItem, onConfi
         detalles,
       })
       .then((response) => {
-        toast.success("¡Compra confirmada!");
-        onConfirmPurchase(response.data.data.id);
+        toast.success("¡Compra confirmada!", { position: "top-left" });
+        onConfirmPurchase(response.data.data);
         setIsDialogOpen(false);
       })
       .catch((error) => {

@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import TicketForm from "@/components/employee-dashboard/ticket-form";
+import SaleDetailSheet from "@/components/dashboard/sales/sale-detail-sheet";
 
 export default function PuntoDeVenta() {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ export default function PuntoDeVenta() {
   const [cartItems, setCartItems] = useState([]);
   const [ticketDialog, setTicketDialog] = useState(false);
   const [ventaId, setVentaId] = useState(null);
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [saleData, setSaleData] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -136,8 +139,10 @@ export default function PuntoDeVenta() {
             cartItems={cartItems}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            onConfirmPurchase={(ventaId) => {
-              setVentaId(ventaId);
+            onConfirmPurchase={(venta) => {
+              setVentaId(venta.id);
+              setSaleData(venta); // venta ahora sí tiene comprobante, empleado, etc.
+              setShowReceipt(true);
               setTicketDialog(true);
               setCartItems([]);
               triggerRefresh();
@@ -163,6 +168,9 @@ export default function PuntoDeVenta() {
           />
         </DialogContent>
       </Dialog>
+      {saleData && (
+        <SaleDetailSheet open={showReceipt} onOpenChange={setShowReceipt} sale={saleData} />
+      )}
     </div>
   );
 }

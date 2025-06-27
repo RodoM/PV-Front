@@ -28,6 +28,32 @@ html {
   background: transparent;
 }
 
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-receipt {
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-page {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

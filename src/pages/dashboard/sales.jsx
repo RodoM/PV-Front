@@ -19,7 +19,13 @@ function Sales() {
       .get("/sale/list", { params: { pageNumber, pageSize } })
       .then((res) => {
         const { data } = res.data;
-        setData(data.data);
+
+        const ventasFiltradas = data.data.filter(
+          (venta) =>
+            venta.comprobante?.tipoComprobante === "ComprobanteVenta" ||
+            venta.comprobante?.tipoComprobante === "ConsumoInterno"
+        );
+        setData(ventasFiltradas);
         setPageCount(data.totalPages);
       })
       .catch(() => {

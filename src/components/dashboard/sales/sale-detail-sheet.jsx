@@ -1,4 +1,3 @@
-import { useBusiness } from "@/providers/business-context";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,7 +7,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { Receipt, Printer } from "lucide-react";
+import { useBusiness } from "@/providers/business-context";
+import { Printer } from "lucide-react";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -42,76 +42,42 @@ const getPaymentMethod = (code) => {
 
 function SaleDetailSheet({ open, onOpenChange, sale }) {
   const { business } = useBusiness();
+
   const handlePrint = () => {
     window.print();
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <Receipt className="h-5 w-5" />
-            Recibo de Compra
-          </SheetTitle>
-          <SheetDescription>
-            Comprobante #{sale.id} - {sale.comprobante.tipoComprobante}
-          </SheetDescription>
-        </SheetHeader>
-
-        <div className="p-4 mt-6 space-y-4 font-mono text-sm">
-          <div className="text-center space-y-1">
-            <h2 className="font-bold text-lg">PUNTO DE VENTA</h2>
-            <p>Puesto: {sale.puesto.nombre}</p>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span>Comprobante:</span>
-              <span>#{sale.comprobante.id}</span>
+      <SheetContent className="print-receipt w-full max-w-[540px] max-h-screen overflow-y-auto bg-white text-gray-900 font-mono text-sm">
+        <div className="print-page p-4">
+          <SheetHeader className="text-center p-0 mb-4">
+            <SheetTitle className="text-xl font-bold text-gray-900">{business?.nombre}</SheetTitle>
+            <SheetDescription className="text-gray-600">
+              CUIT: {business?.numeroDocumento}
+            </SheetDescription>
+            {business.calle && business.altura && business.ciudad && (
+              <div className="text-gray-600">
+                Domicilio: {business?.calle} {business?.altura}, {business?.ciudad}
+              </div>
+            )}
+            <SheetDescription className="mt-2 font-bold text-base text-blue-600">
+              {sale.comprobante.tipoComprobante === "ComprobanteVenta" ? "Venta" : "Consumo"}
+            </SheetDescription>
+            <div className="text-sm mt-1">
+              N°: <strong>{sale?.comprobante?.id}</strong>
             </div>
-            <div className="flex justify-between">
-              <span>Tipo:</span>
-              <span>{sale.comprobante.tipoComprobante}</span>
+            <div className="text-sm">Fecha: {formatDate(sale?.fechaAlta)}</div>
+            <div className="text-sm">
+              Vendedor: {sale?.empleado?.nombre} {sale?.empleado?.apellido}
             </div>
-            <div className="flex justify-between">
-              <span>Fecha:</span>
-              <span>{formatDate(sale.fechaAlta)}</span>
-            </div>
-          </div>
+            <div className="text-sm">Puesto: {sale?.puesto?.nombre}</div>
+          </SheetHeader>
 
-          <Separator />
+          <Separator className="my-4" />
 
-          <div className="space-y-1">
-            <h3 className="font-semibold">NEGOCIO</h3>
-            <div className="flex justify-between">
-              <span>Nombre:</span>
-              <span>{business?.nombre}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>{business?.tipoDocumento}:</span>
-              <span>{business?.numeroDocumento}</span>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-1">
-            <h3 className="font-semibold">VENDEDOR</h3>
-            <div className="flex justify-between">
-              <span>Nombre:</span>
-              <span>
-                {sale.empleado.nombre} {sale.empleado.apellido}
-              </span>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-2">
-            <h3 className="font-semibold">PRODUCTOS</h3>
+          <div className="mb-4">
+            <h3 className="font-bold text-base text-gray-900 mb-2">DETALLE DE PRODUCTOS</h3>
             {sale.detalles.map((item, index) => (
               <div key={index} className="space-y-1 pb-2">
                 <div className="font-medium">{item.nombreProducto}</div>
@@ -129,14 +95,14 @@ function SaleDetailSheet({ open, onOpenChange, sale }) {
             ))}
           </div>
 
-          <Separator />
+          <Separator className="my-4" />
 
-          <div className="space-y-2">
+          <div className="mb-4 space-y-1">
             <div className="flex justify-between">
               <span>Subtotal:</span>
               <span>{formatCurrency(sale.subtotal)}</span>
             </div>
-            {sale.descuentoTotal && (
+            {sale.descuentoTotal > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Descuento:</span>
                 <span>-{formatCurrency(sale.descuentoTotal)}</span>
@@ -146,32 +112,32 @@ function SaleDetailSheet({ open, onOpenChange, sale }) {
               <span>Impuestos:</span>
               <span>{formatCurrency(sale.impuestos)}</span>
             </div>
-            <Separator />
-            <div className="flex justify-between font-bold text-lg">
+            <Separator className="my-3 border-dashed" />
+            <div className="flex justify-between font-bold text-base text-gray-900">
               <span>TOTAL:</span>
               <span>{formatCurrency(sale.total)}</span>
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-4" />
 
-          <div className="space-y-1">
-            <h3 className="font-semibold">PAGO</h3>
+          <div className="mb-4">
+            <h3 className="font-bold text-base text-gray-900 mb-2">FORMA DE PAGO</h3>
             <div className="flex justify-between">
               <span>Método:</span>
               <span>{getPaymentMethod(sale.formaPago)}</span>
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-4" />
 
-          <div className="text-center text-xs text-muted-foreground space-y-1">
-            <p>¡Gracias por su compra!</p>
-            <p>Conserve este comprobante</p>
+          <div className="text-center text-xs text-muted-foreground">
+            <p className="mb-1">¡Gracias por su compra!</p>
+            <p className="mb-1">Este comprobante no tiene validez fiscal</p>
             <p className="mt-2">Generado el {formatDate(new Date().toISOString())}</p>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 no-print">
             <Button onClick={handlePrint} className="w-full gap-2">
               <Printer className="h-4 w-4" />
               Imprimir Recibo

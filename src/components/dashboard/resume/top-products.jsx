@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
 
 function obtenerTopProductosPorFrecuencia(ventas, limite = 10) {
   const frecuencia = {};
@@ -25,13 +26,26 @@ function obtenerTopProductosPorFrecuencia(ventas, limite = 10) {
 }
 
 function TopProducts({ sales }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    handleResize(); // detectar al inicio
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const limite = isMobile ? 5 : 20;
   const todasLasVentas = Object.values(sales).flatMap((mes) => mes.ventas || []);
-  const topProductos = obtenerTopProductosPorFrecuencia(todasLasVentas);
+  const topProductos = obtenerTopProductosPorFrecuencia(todasLasVentas, limite);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top productos más vendidos</CardTitle>
+        <CardTitle>Top {limite} productos más vendidos</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <ResponsiveContainer width="100%" height={400}>
